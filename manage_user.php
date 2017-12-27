@@ -37,8 +37,13 @@
       }
     ?>
     <form action="add_new_user.php" method="post">
-        <input type="submit" value=" Add new user "> &nbsp;
-        <input type="reset" value="Cancel">
+        <input type="submit" value=" Add new user ">
     </form><br>
+</form>
+<form action="home.php">
+    <div class="text-right">
+    <input type="submit" value = "Back">
+    </div>
+</form>
 </body>
 </html>

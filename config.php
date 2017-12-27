@@ -39,5 +39,13 @@
             letter-spacing: 2px;
             font-family: Montserrat, sans-serif;
         }
+        label.col-sm-2 {
+        text-align: right !important;
+        }
+
+        label.col-sm-offset {
+        text-align: left !important;
+        }
+
     </style>
     </html>

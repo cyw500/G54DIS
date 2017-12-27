@@ -5,7 +5,7 @@
    $manage_users = $user_type = "";
 
    $user_check = $_SESSION['login_user'];
-   $ses_sql = mysqli_query($db,"SELECT username, Admin FROM officer_access WHERE username = '$user_check'");
+   $ses_sql = mysqli_query($db,"SELECT username, Admin FROM officer_access WHERE username = '$user_check';");
    $row = mysqli_fetch_array($ses_sql);
    $login_session = $row['username'];
 

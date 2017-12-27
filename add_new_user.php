@@ -40,6 +40,12 @@
                 <input type="reset" value="Cancel">
             </form><br>
             <?php echo $message ?>
+        </form>
+        <form action="home.php">
+            <div class="text-right">
+            <input type="submit" value = "Back">
+            </div>
+        </form>
     </body>
 
     </html>

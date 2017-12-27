@@ -11,7 +11,7 @@
       $myusername = mysqli_real_escape_string($db,$_POST['username']);
       $mypassword = mysqli_real_escape_string($db,$_POST['password']);
 
-      $sql = "SELECT * FROM officer_access WHERE username = '$myusername' and password = '$mypassword'";
+      $sql = "SELECT * FROM officer_access WHERE username = '$myusername' and password = '$mypassword';";
       $result = mysqli_query($db,$sql);
       $row = mysqli_fetch_array($result); // what is the point of this?
 
@@ -22,7 +22,7 @@
       if($count == 1) {
         $_SESSION['login_user'] = $myusername;
 
-        header("location: home.php");
+        header("Location: home.php");
       }
 	  else {
          $error = "Your Login Name or Password is invalid";
@@ -61,11 +61,15 @@
             <div style = "margin:30px">
 
                <form action = "" method = "post">
-                   <div align = "center">
-                      <label>Username  : </label><input type = "text" name = "username" class = "box"/><br /><br />
-                      <label>Password  : </label><input type = "password" name = "password" class = "box" /><br/><br />
-                      <input type = "submit" value = " Login "/><br />
-                  </div>
+                     <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Username">
+                     </div><br>
+                      <div class="input-group">
+                       <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                       <input type="password" name="password" class="form-control" placeholder="Password">
+                   </div><br>
+                      <input type = "submit" value = " Login " class="btn btn-default btn-block"/><br />
                </form>
 
                <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $error ?></div>

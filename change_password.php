@@ -17,11 +17,12 @@
       if ($count == 1){
           if(($_POST['new_password'] != "" and $_POST['r_new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
              // send update query to the database
-             mysqli_query($db, "UPDATE `officer_access` SET `password` = '$new_password'
-                                WHERE `officer_access`.`username` = '$login_session';");
+             mysqli_query($db, "UPDATE officer_access SET password = '$new_password'
+                                WHERE officer_access.username = '$login_session';");
              // auto logout in 10 sec
-             header("refresh:10; url = logout.php");
-             $message = "Password successfully change, You'll be logout in about 10 secs.";
+             header("refresh:5; url = logout.php");
+             $message = "Password successfully change, please log in again. <br />
+                        You're redirecting to the login.";
 
          } else if ($_POST['new_password'] != $_POST['r_new_password']) {
               $message = "New password does not match." ;
@@ -57,9 +58,9 @@
        https://stackoverflow.com/questions/2906582/how-to-create-an-html-button-that-acts-like-a-link -->
         </form>
         <form action="home.php">
-            <input type="submit" value = "Back" style = "float: right" />
-            <!--https://www.w3schools.com/tags/att_button_formaction.asp
-            http://www.hyperlinkcode.com/button-links.php-->
+            <div class="text-right">
+            <input type="submit" value = "Back">
+            </div>
         </form>
     </body>
 

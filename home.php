@@ -1,7 +1,8 @@
 <?php
    include('session.php');
+   print_r($_SESSION);
+
    $message = "";
-   $keyword = "";
    $result = "";
    $sub_result = "";
 
@@ -10,23 +11,34 @@
            case " Search Person ":
                 $keyword = mysqli_real_escape_string($db,$_POST['keyword']);
                 $sql = "SELECT * FROM people WHERE CONCAT_WS('|', People_name, People_licence)
-                        LIKE '%$keyword%' ORDER BY People_name";
+                        LIKE '%$keyword%' ORDER BY People_name;";
                 $result = mysqli_query($db, $sql);
+                $_SESSION['$var'] = "Person";
                 break;
 
            case " Search Vehicle ":
-                $message = "2";
+                $keyword = mysqli_real_escape_string($db,$_POST['keyword']);
+                $sql = "SELECT * FROM vehicle WHERE Vehicle_licence LIKE '%$keyword%';";
+                $result = mysqli_query($db, $sql);
+                $_SESSION['$var'] = "Vehicle";
                 break;
 
            case " Add Report ":
                 $message = "3";
                 break;
             }
-    } if (isset($_GET['ref']))
-     {
-       $sql = "SELECT * FROM people WHERE People_ID = ".$_GET['ref'].";";
-       $result = mysqli_query($db, $sql);
-     }
+    } if (isset($_GET['ref'])) {
+         if ($_SESSION['$var'] == "Person") {
+           $sql = "SELECT * FROM people WHERE People_ID = ".$_GET['ref'].";";
+           $result = mysqli_query($db, $sql);
+         }
+         if ($_SESSION['$var'] == "Vehicle") {
+           $sql = "SELECT * FROM vehicle WHERE Vehicle_ID = ".$_GET['ref'].";";
+           $result = mysqli_query($db, $sql);
+         }
+       }
+
+
 ?>
 
     <html>
@@ -37,7 +49,13 @@
 
     <body>
         <form action="home.php" method="post">
-            <label>Search  : </label><input type="text" name="keyword" class="box"> &nbsp;
+            <div class="col-lg-4">
+            <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" name="keyword">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            </div>
+
+            </div>
             <input type="submit" name="action" value=" Search Person "> &nbsp;
             <input type="submit" name="action" value=" Search Vehicle "><br><br>
             <input type="submit" name="action" value=" Add Report "> &nbsp;
@@ -48,36 +66,42 @@
         if ($result != "") {
             if (mysqli_num_rows($result) == 0) {
 
-                echo "Person not found";
+                echo $_SESSION['$var']." not found";
 
             } else if (mysqli_num_rows($result) == 1) {
-                $row = mysqli_fetch_assoc($result);
-                $sub_sql = "SELECT * FROM people NATURAL join ownership natural join vehicle where people.People_ID = '{$row["People_ID"]}' ";
-                $sub_result = mysqli_query($db, $sub_sql);
-
-                echo "Name: " . $row["People_name"]. "<br> Licence: "
-                    . $row["People_licence"]. "<br> Address " . $row["People_address"].
-                    "<br><br>";
-
-                while($sub_row = mysqli_fetch_assoc($sub_result)){
-                    echo "Vehicle: " . $sub_row["Vehicle_colour"]. ", " . $sub_row["Vehicle_type"].
-                    " (". $sub_row["Vehicle_licence"]. ")<br>";
+                // extract person_id
+                if ($_SESSION['$var'] == "Person") {
+                    $_SESSION["People_ID"] = mysqli_fetch_assoc($result)["People_ID"];
+                    header("Location: person_detail.php");
                 }
-//              header("Location: add_new_person.php");
-
+                if ($_SESSION['$var'] == "Vehicle") {
+                    $_SESSION["Vehicle_ID"] = mysqli_fetch_assoc($result)["Vehicle_ID"];
+                    header("Location: vehicle_detail.php");
+                }
             } else {
 
-            echo mysqli_num_rows($result). " People found:" ;
-                echo "<ul>";  // start list
-                // loop through each row of the result (each tuple will
-                // be contained in the associative array $row)
-                while($row = mysqli_fetch_assoc($result))
-                    {
-                    $id = $row["People_ID"];
-                    echo "<li> <a href = '?ref=$id'>" . $row["People_name"]. "</a> (" . $row["People_address"]. ")";
+            echo mysqli_num_rows($result). " " .$_SESSION['$var']." found:" ;
+                if ($_SESSION['$var'] == "Person") {
+                    echo "<ul>";  // start list
+                    // loop through each row of the result (each tuple will
+                    // be contained in the associative array $row)
+                    while($row = mysqli_fetch_assoc($result))
+                        {
+                        $id = $row["People_ID"];
+                        echo "<li> <a href = '?ref=$id'>" . $row["People_name"]. "</a> (" . $row["People_address"]. ")";
+                        }
+                        echo "</ul>";
                     }
-                    echo "</ul>";
-
+                if ($_SESSION['$var'] == "Vehicle")
+                {
+                    echo "<ul>";  // start list
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $id = $row["Vehicle_ID"];
+                        echo "<li> <a href = '?ref=$id'>" . $row["Vehicle_licence"].
+                            "</a>: " . $row["Vehicle_colour"]. ", " .$row["Vehicle_type"];
+                        }
+                        echo "</ul>";
+                }
             }
         }
         ?>
