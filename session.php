@@ -2,16 +2,17 @@
    include('config.php');
    session_start();
 
+   $message = "";
+
    $manage_users = $user_type = "";
 
    $user_check = $_SESSION['login_user'];
-   $ses_sql = mysqli_query($db,"SELECT username, Admin FROM officer_access WHERE username = '$user_check';");
+   $ses_sql = mysqli_query($db,"SELECT username, Admin, Officer_ID FROM Officer_access WHERE username = '$user_check';");
    $row = mysqli_fetch_array($ses_sql);
    $login_session = $row['username'];
+   $login_user_id = $row['Officer_ID'];
 
-   $_SESSION['Admin'] = $row['Admin'];
-
-   if (isset($_SESSION['Admin'])){
+   if (isset($row['Admin'])){
        // if $user_type is not Null / = Admin set variable to string for disply
       $manage_users = "Manage users";
       $user_type = "[Administrator]";
@@ -32,9 +33,6 @@
 
 <html>
 <body>
-    <div class="jumbotron text-center">
-        <h1>Police Traffic Records</h1>
-    </div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <p class="navbar-text"> Username :

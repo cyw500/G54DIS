@@ -8,7 +8,7 @@
       $old_password = mysqli_real_escape_string($db,$_POST['old_password']);
       $new_password = mysqli_real_escape_string($db,$_POST['new_password']);
 
-      $sql = "SELECT * FROM officer_access WHERE username = '$login_session' AND password = '$old_password';";
+      $sql = "SELECT * FROM Officer_access WHERE username = '$login_session' AND password = '$old_password';";
       $result = mysqli_query($db,$sql);
       $row = mysqli_fetch_array($result);
 
@@ -17,11 +17,11 @@
       if ($count == 1){
           if(($_POST['new_password'] != "" and $_POST['r_new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
              // send update query to the database
-             mysqli_query($db, "UPDATE officer_access SET password = '$new_password'
-                                WHERE officer_access.username = '$login_session';");
+             mysqli_query($db, "UPDATE Officer_access SET password = '$new_password'
+                                WHERE username = '$login_session';");
              // auto logout in 10 sec
-             header("refresh:5; url = logout.php");
-             $message = "Password successfully change, please log in again. <br />
+             header("refresh:4; url = logout.php");
+             $message = "Password successfully change, please log in again. <br/>
                         You're redirecting to the login.";
 
          } else if ($_POST['new_password'] != $_POST['r_new_password']) {

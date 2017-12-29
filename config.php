@@ -3,7 +3,12 @@
  $username = "root";
  $password = "";
  $dbname = "g54dis2";
-
+ /*
+  $servername = "mysql.cs.nott.ac.uk";
+  $username = "psxcyw";
+  $password = "adv6125h";
+  $dbname = "psxcyw";
+ */
  $db = mysqli_connect($servername, $username, $password, $dbname);;
 
  if($db == false){
@@ -11,7 +16,6 @@
  }
 
  ?>
-
 
     <html>
     <meta charset="utf-8">
@@ -45,7 +49,11 @@
 
         label.col-sm-offset {
         text-align: left !important;
+
         }
 
     </style>
+    <div class="jumbotron text-center">
+        <h1>Police Traffic Records</h1>
+    </div>
     </html>

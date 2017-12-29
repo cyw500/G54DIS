@@ -1,6 +1,11 @@
 <?php
    include('session.php');
 
+   // if user arent admin redirect page
+   if ($user_type == "") {
+       header ("Location: home.php");
+   }
+
    $message = "";
 ?>
     <html>
@@ -17,10 +22,10 @@
               } else {
                 if (!isset($_POST['admin'])) {
                   // if checkbox not check
-                  mysqli_query($db,"INSERT INTO officer_access (username, password)
+                  mysqli_query($db,"INSERT INTO Officer_access (username, password)
                         VALUES ('".$_POST['username']."','".$_POST['password']."');");
                 } else {
-                    mysqli_query($db, "INSERT INTO officer_access (Admin, username, password)
+                    mysqli_query($db, "INSERT INTO Officer_access (Admin, username, password)
                           VALUES ('Admin','".$_POST['username']."','".$_POST['password']."');");
                   }
                 header("Location: manage_user.php");
