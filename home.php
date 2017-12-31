@@ -15,6 +15,11 @@
                 $_SESSION['keyword'] = mysqli_real_escape_string($db,$_POST['keyword']);
                 header("Location: vehicle.php");
                 break;
+
+            case "Add Report":
+                $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] = $_SESSION['Offence_ID'] = "" ;
+                header("Location: add_report.php");
+                break;
     }
 }
 
@@ -50,7 +55,7 @@
             <div class="row">
             <div class="col-sm-offset-1">
                 <div class="col-sm-2">
-                      <a href="add_report.php" class="btn btn-default btn-block" role="button">Add Report</a>
+                      <input type="submit" name="action" value="Add Report" class="btn btn-default btn-block"/>
                 </div>
                 <div class="col-sm-2">
                     <a href="view_report.php" class='btn btn-default btn-block' role='button' style='white-space: normal'>
@@ -61,6 +66,7 @@
                     echo "View ALL reports"; }
                 ?>
                 </a>
+
                 </div>
                 <div class="col-sm-offset-3 col-sm-2">
                 <?php

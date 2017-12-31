@@ -1,7 +1,7 @@
 <?php
 
    $P_id = $_SESSION["People_ID"];
-   echo $_SESSION["Vehicle_ID"]." ".$_SESSION["People_ID"];
+//   echo $_SESSION["Vehicle_ID"]." ".$_SESSION["People_ID"];
 
    if (isset($_POST['save_p']))
    // saving the edit(a new entry) and connect to database for an update
@@ -25,15 +25,19 @@
            $_SESSION["Vehicle_ID"] = $_GET['ref_v'];
 
        } else if (isset($_POST['save_v'])) {
-           if (!mysqli_query($db, "UPDATE Vehicle SET Vehicle_licence = '".$_POST['VL']."',
-           Vehicle_colour = '".$_POST['colour']."', Vehicle_type = '".$_POST['type']."'
-           WHERE Vehicle_ID = '".$_SESSION["Vehicle_ID"]."';" )) {
+           if (!mysqli_query($db, "UPDATE Vehicle
+           SET Vehicle_licence = '".$_POST['VL']."',
+                Vehicle_colour = '".$_POST['colour']."',
+                Vehicle_type = '".$_POST['type']."'
+           WHERE
+           Vehicle_ID = '".$_SESSION["Vehicle_ID"]."';" ))
+           {
                echo("Error description: " . mysqli_error($db));
            }
        }
 
-       if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES
-       (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");"))
+       if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID)
+       VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");"))
        {
        echo("Error description: " . mysqli_error($db));
        } else {

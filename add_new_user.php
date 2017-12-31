@@ -20,13 +20,13 @@
               } else {
                 if (!isset($_POST['admin'])) {
                   // if checkbox not check
-                  mysqli_query($db,"INSERT INTO Officer_access (username, password)
-                        VALUES ('".$_POST['username']."','".$_POST['password']."');");
-                } else {
-                    mysqli_query($db, "INSERT INTO Officer_access (Admin, username, password)
-                          VALUES ('Admin','".$_POST['username']."','".$_POST['password']."');");
-                  }
-                header("Location: manage_user.php");
+                    $_POST['admin'] = 0 ;
+                }
+                 if (!mysqli_query($db,"INSERT INTO Officer_access (Admin, username, password)
+                    VALUES (NULLIF(".$_POST['admin'].", 0 ) ,'".$_POST['username']."','".$_POST['password']."');")) {
+                        echo("Error description: " . mysqli_error($db));
+                    }
+                header ("Location: manage_user.php");
               }
             } else {
                 $message = "Please enter valid username and password"; }
@@ -81,8 +81,11 @@
                         <button type="reset" class="btn btn-default btn-block" value="Cancel"> Cancel </button>
                     </div>
                 </div>
-            </form><br>
+            </form>
+            <div class="col-sm-offset-3">
             <?php echo $message ?>
+            </div>
+            <br>
         <div class="col-sm-7">
         <a href="home.php" class="btn btn-default pull-right">Back</a>
         </div>

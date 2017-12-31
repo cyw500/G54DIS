@@ -13,13 +13,13 @@
        }
 
    if (isset($_POST['save'])) {
-       $I = $_POST['incident'];
-       $fine = $_POST['fine'];
-       $points = $_POST['points'];
 
-       mysqli_query($db, "INSERT INTO Fines VALUES ('', '$fine', '$points', '$I');");
+       mysqli_query($db, "INSERT INTO Fines
+           (Fine_ID, Fine_Amount, Fine_Points, Incident_ID)
+           VALUES
+           (NULL, '".$_POST['fine']."', '".$_POST['points']."', '".$_POST['incident']."');");
 
-       header ("Location: add_fine.php");
+       header ("Location: view_fines.php");
    }
 
 

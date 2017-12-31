@@ -26,17 +26,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
-        .page-header {
-            padding: 1;
+        .jumbotron {
             background-color: #eeffff;
-            border: 0;
-            margin: 0;
-            text-align: center;
+            margin-bottom: 0;
+            padding: 1;
         }
         .navbar {
             background-color: #eeffff;
             border: 0;
-            font-size: 18px;
+            font-size: 16px;
             letter-spacing: 2px;
             font-family: Montserrat, sans-serif;
         }
@@ -55,13 +53,8 @@
             border-collapse:separate;
             border-spacing:20 10px;
         }
-
-
     </style>
-<!--    <div class="jumbotron text-center">
+    <div class="jumbotron text-center">
          <h1>Police Traffic Records</h1>
-    </div> -->
-    <div class="page-header">
-        <h1>Police Traffic Records</h1>
     </div>
     </html>

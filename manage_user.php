@@ -6,21 +6,21 @@
        header ("Location: home.php");
    }
 ?>
-<script>
-    // A JavaScript function to confirm delete
-    function confirmDelete(ID)
-    {
-       var act = confirm("Are you sure?");
-       if (act == true) // if OK pressed
-       {
-          delParam="?del="+ID; // add del parameter to URL
-          this.document.location.href=delParam; // reload document
-       }
-    }
-</script>
 
 <html>
 <body>
+    <script>
+        // A JavaScript function to confirm delete
+        function confirmDelete(ID)
+        {
+           var act = confirm("Are you sure?");
+           if (act == true) // if OK pressed
+           {
+              delParam="?del="+ID; // add del parameter to URL
+              this.document.location.href=delParam; // reload document
+           }
+        }
+    </script>
     <div class="container">
     <h1> User management</h1>
     <?php

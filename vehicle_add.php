@@ -1,7 +1,7 @@
 <?php
 
    $V_id = $_SESSION["Vehicle_ID"];
-   echo $_SESSION["Vehicle_ID"]." ".$_SESSION["People_ID"]."<br>";
+//   echo $_SESSION["Vehicle_ID"]." ".$_SESSION["People_ID"]."<br>";
 
    if (isset($_POST['save_v']))
    // saving the edit and connect to database for an update
