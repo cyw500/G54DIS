@@ -19,8 +19,8 @@
              // send update query to the database
              mysqli_query($db, "UPDATE Officer_access SET password = '$new_password'
                                 WHERE username = '$login_session';");
-             // auto logout in 10 sec
-             header("refresh:4; url = logout.php");
+             // auto logout in 2 sec
+             header("refresh:2; url = logout.php");
              $message = "Password successfully change, please log in again. <br/>
                         You're redirecting to the login.";
 
@@ -44,24 +44,51 @@
     </head>
 
     <body>
-
-        <form action="" method="post">
-            <div align="center">
-                <label>Old password : </label><input type="password" name="old_password" class="box"><br><br>
-                <label>New Password : </label><input type="password" name="new_password" class="box"><br><br>
-                <label>Repeat new Password : </label><input type="password" name="r_new_password" class="box"><br><br>
-                <input type="submit" value=" OK "/> &nbsp;&nbsp;&nbsp;&nbsp; <input type="reset" value=" Cancel "><br><br>
-                <?php echo $message ?>
-            </div>
-            <!-- <div id="button"><a href= "welcome.php" style="float: right">Back</a></div>
-           <a href="welcome.php" class="btn btn-default">back</a>
-       https://stackoverflow.com/questions/2906582/how-to-create-an-html-button-that-acts-like-a-link -->
-        </form>
-        <form action="home.php">
-            <div class="text-right">
-            <input type="submit" value = "Back">
-            </div>
-        </form>
+        <div class="container">
+            <form action="" method="post">
+                <div class="row">
+                 <div class="form-group">
+                  <label class="control-label col-sm-offset-2 col-sm-2"> Old password: </label>
+                   <div class="col-sm-5">
+                    <input type="text" class="form-control" name="old_password">
+                   </div>
+                 </div>
+                </div>
+                <br>
+                <div class="row">
+                 <div class="form-group">
+                   <label class="control-label col-sm-offset-2 col-sm-2"> New password: </label>
+                   <div class="col-sm-5">
+                     <input type="password" class="form-control" name="new_password">
+                   </div>
+                  </div>
+                 </div>
+                 <br>
+                 <div class="row">
+                  <div class="form-group">
+                    <label class="control-label col-sm-offset-2 col-sm-2"> Repeat new password: </label>
+                    <div class="col-sm-5">
+                      <input type="password" class="form-control" name="r_new_password">
+                    </div>
+                   </div>
+                  </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-offset-4 col-sm-2">
+                        <input type="submit" class="btn btn-default btn-block" value="OK">
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-2">
+                        <input type="reset" class="btn btn-default btn-block" value="Cancel">
+                    </div>
+                </div>
+            </form>
+        <div align="center">
+        <?php echo $message ?>
+        </div>
+        <div class="col-sm-10">
+        <a href="home.php" class="btn btn-default pull-right">Back</a>
+        </div>
+        </div>
     </body>
 
     </html>

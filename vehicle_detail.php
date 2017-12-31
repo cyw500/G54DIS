@@ -5,14 +5,15 @@
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case "Delete":
-                mysqli_query($db, "DELETE FROM Vehicle WHERE Vehicle_ID = '$V_id';");
+                if (!mysqli_query($db, "DELETE FROM Vehicle WHERE Vehicle_ID = '$V_id';")) {
+                    echo("Error description: " . mysqli_error($db));
                 // need to set ownswership table delete/update on cascade
-                header("refresh:2; url = vehicle.php");
-                $message = "Vehicle sucessfully remove from database";
+                } else { header("refresh:2; url = vehicle.php");
+                $message = "Vehicle sucessfully remove from database";}
                 break;
 
             case "Add new vehicle";
-                mysqli_query($db, "INSERT INTO Vehicle VALUES ('', '', '', '');");
+                mysqli_query($db, "INSERT INTO Vehicle VALUES ('', '', '', NULL);");
                 $_SESSION["Vehicle_ID"] = mysqli_insert_id($db);
 
             case "Edit":
@@ -42,10 +43,9 @@
 <html>
 <body>
     <form action="" method="post">
-        <input type="submit" name="action" value="Edit"> &nbsp;
-        <input type="submit" name="action" value="Delete"><br><br>
-        <input type="submit" name="action" value="Add new vehicle"> &nbsp;
-        <a href="vehicle_detail.php" class="btn btn-default pull-right" role="button">Back</a>
+        <input type="submit" class="btn btn-default" name="action" value="Edit"> &nbsp;
+        <input type="submit" class="btn btn-default" name="action" value="Delete"><br><br>
+        <input type="submit" class="btn btn-default" name="action" value="Add new vehicle"> &nbsp;
     </form><br>
     <?php echo $message ?>
 </body>

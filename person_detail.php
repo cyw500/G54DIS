@@ -10,11 +10,11 @@
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case "Delete":
-                mysqli_query($db, "DELETE FROM People WHERE People_ID = '$P_id';");
+                if (!mysqli_query($db, "DELETE FROM People WHERE People_ID = '$P_id';")) {
+                    echo("Error description: " . mysqli_error($db));
                 // need to set ownswership table delete/update on cascade
-                // set incident fk set Null or cascade !!! ???
-                header("refresh:2; url = person.php");
-                $message = "Person sucessfully remove from database";
+                } else { header("refresh:2; url = person.php");
+                $message = "Person sucessfully remove from database";}
                 break;
 
             case "Add new person";
@@ -29,11 +29,6 @@
     $result = mysqli_query($db, $sql);
     $row = mysqli_fetch_assoc($result);
 
-    //redirect back to person.php if the entry is empty or No name
-/*    if ($row["People_name"] == "" || !isset($_SESSION["People_ID"])) {
-        header("Location: person.php");
-    }
-*/
     $sub_sql = "SELECT * FROM People NATURAL JOIN Ownership NATURAL JOIN Vehicle
                 WHERE people.People_ID = '$P_id';";
     $sub_result = mysqli_query($db, $sub_sql);
@@ -55,9 +50,9 @@
 <html>
 <body>
     <form action="" method="post">
-        <input type="submit" name="action" value="Edit"> &nbsp;
-        <input type="submit" name="action" value="Delete"><br><br>
-        <input type="submit" name="action" value="Add new person"> &nbsp;
+        <input type="submit" class="btn btn-default" name="action" value="Edit"> &nbsp;
+        <input type="submit" class="btn btn-default" name="action" value="Delete"><br><br>
+        <input type="submit" class="btn btn-default" name="action" value="Add new person"> &nbsp;
     </form><br>
     <?php echo $message ?>
 </body>

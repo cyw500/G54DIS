@@ -5,8 +5,12 @@
    if ($user_type == "") {
        header ("Location: home.php");
    }
+?>
+
+<div class="col-sm-offset-1">
+<?php
    // shouldnt use select * , select whatever needed only
-   $result = mysqli_query($db, "SELECT * FROM fines NATURAL JOIN People
+   $result = mysqli_query($db, "SELECT * FROM Fines NATURAL JOIN People
        NATURAL JOIN Incident NATURAL JOIN Offence ORDER BY Incident_Date DESC");
 
    echo "Fines: <br><br>";
@@ -18,5 +22,5 @@
        "<br> Fine: £". $row["Fine_Amount"]. " (". $row["Fine_Points"]." points)<br><br><br>" ;
     }
     echo "</ul>";
-
 ?>
+</div>

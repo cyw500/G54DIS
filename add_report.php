@@ -5,6 +5,7 @@
 <html>
 <body>
 <div class="container">
+ <h1>Add New Report</h1>
   <form class="form-horizontal" action="" method="post">
     <div class="form-group">
       <label class="control-label col-sm-2"> Driver: </label>
@@ -45,7 +46,7 @@
     <div class="form-group">
         <label class="control-label col-sm-2">Incident description: </label>
         <div class="col-sm-10">
-            <textarea class="form-control" rows="5" placeholder="Enter incident detail" required></textarea>
+            <textarea class="form-control" rows="3" placeholder="Enter incident detail" required></textarea>
         </div>
     </div>
 

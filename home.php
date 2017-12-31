@@ -1,10 +1,6 @@
 <?php
    include('session.php');
 
-/*   echo str_repeat('&nbsp;', 20);
-   print_r($_SESSION);
-   echo "<br><br>";
-*/
    $result = "";
    $sub_result = "";
 

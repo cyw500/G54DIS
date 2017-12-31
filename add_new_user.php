@@ -9,9 +9,7 @@
    $message = "";
 ?>
     <html>
-
     <body>
-        <h1> User management</h1>
         <?php
         if($_SERVER["REQUEST_METHOD"] == "POST")
           {
@@ -36,21 +34,59 @@
         }
 
         ?>
+        <div class="container">
             <form action="" method="post">
-                <label>Username : </label><input type="text" name="username"><br><br>
-                <label>Password : </label><input type="password" name="password"><br><br>
-                <label>Repeat Password : </label><input type="password" name="r_password"><br><br>
-                <label>Admin  : </label><input type="checkbox" name="admin" value="true"> <br>
-                <input type="submit" name="add" value="Add new user"> &nbsp;
-                <input type="reset" value="Cancel">
+                <h1> User management</h1> <br>
+                <div class="row">
+                 <div class="form-group">
+                  <label class="control-label col-sm-2"> Userame: </label>
+                   <div class="col-sm-5">
+                    <input type="text" class="form-control" name="username">
+                   </div>
+                 </div>
+                </div>
+                <br>
+                <div class="row">
+                 <div class="form-group">
+                   <label class="control-label col-sm-2"> Password: </label>
+                   <div class="col-sm-5">
+                     <input type="password" class="form-control" name="password">
+                   </div>
+                  </div>
+                 </div>
+                 <br>
+                 <div class="row">
+                  <div class="form-group">
+                    <label class="control-label col-sm-2"> Repeat Password: </label>
+                    <div class="col-sm-5">
+                      <input type="password" class="form-control" name="r_password">
+                    </div>
+                   </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                   <div class="form-group">
+                     <label class="control-label col-sm-2"> Admin: </label>
+                     <div class="col-sm-1">
+                       <input type="checkbox" name="admin" value="true">
+                     </div>
+                    </div>
+                   </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <input type="submit" name="add" class="btn btn-default btn-block" value="Add new user" style='white-space: normal'>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-2">
+                        <button type="reset" class="btn btn-default btn-block" value="Cancel"> Cancel </button>
+                    </div>
+                </div>
             </form><br>
             <?php echo $message ?>
-        </form>
-        <form action="home.php">
-            <div class="text-right">
-            <input type="submit" value = "Back">
-            </div>
-        </form>
+        <div class="col-sm-7">
+        <a href="home.php" class="btn btn-default pull-right">Back</a>
+        </div>
+        </div>
     </body>
 
     </html>

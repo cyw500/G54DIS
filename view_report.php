@@ -1,6 +1,10 @@
 <?php
    include('home.php');
+?>
 
+
+<div class="col-sm-offset-1">
+<?php
    if ($user_type == "") {
        $search = $login_user_id;
        echo "Incident reports submitted by $login_session : <br><br>";
@@ -29,3 +33,4 @@
     }
     echo "</ul>";
 ?>
+</div>

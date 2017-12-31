@@ -3,6 +3,10 @@
    include('config.php');
    session_start();
 
+   // echo str_repeat('&nbsp;', 20);
+   // print_r($_SESSION);
+   // echo "<br><br>";
+
    $error = "";
 
 //   if($_SERVER["REQUEST_METHOD"] == "POST") {
