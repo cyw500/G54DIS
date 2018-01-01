@@ -54,7 +54,4 @@
             border-spacing:20 10px;
         }
     </style>
-    <div class="jumbotron text-center">
-         <h1>Police Traffic Records</h1>
-    </div>
     </html>

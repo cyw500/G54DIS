@@ -1,7 +1,7 @@
 <?php
     include('home.php');
     // from previous page stored the Person's ID
-    $keyword = $_SESSION['keyword'];
+//    $keyword = $_SESSION['keyword'];
     $_SESSION['where'] = "main search";
     include('person_search.php');
 

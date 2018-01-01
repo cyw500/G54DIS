@@ -45,7 +45,7 @@
 
     <body>
         <div class="container">
-            <form action="" method="post">
+            <form action="" method="post" autocomplete="off">
                 <div class="row">
                  <div class="form-group">
                   <label class="control-label col-sm-offset-2 col-sm-2"> Old password: </label>

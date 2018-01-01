@@ -1,22 +1,25 @@
 <?php
-
-   $V_id = $_SESSION["Vehicle_ID"];
 //   echo $_SESSION["Vehicle_ID"]." ".$_SESSION["People_ID"]."<br>";
 
    if (isset($_POST['save_v']))
    // saving the edit and connect to database for an update
    {
-     $VL = $_POST['VL'];
-     $colour = $_POST['colour'];
-     $type = $_POST['type'];
+   if ($_POST['VL'] == "" && $_POST['colour'] == "" && $_POST['type'] == "" ) {
+        $message = "Fields can not be all empty, must at least enter in one field";
+    } else {
+        if ($_SESSION["Vehicle_ID"] == ""){
+            mysqli_query($db, "INSERT INTO Vehicle VALUES ('','{$_POST['type']}',
+                '{$_POST['colour']}', NULLIF('{$_POST['VL']}',''));");
+            $_SESSION["Vehicle_ID"] = mysqli_insert_id($db);
+         } else {
+          // updating an edit
+         mysqli_query($db, "UPDATE Vehicle SET Vehicle_licence = NULLIF('{$_POST['VL']}',''),
+         Vehicle_colour = '{$_POST['colour']}', Vehicle_type = '{$_POST['type']}'
+         WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';");
+         }
+         echo '<script>window.location="vehicle_detail.php"</script>';
 
-     if (!mysqli_query($db, "UPDATE Vehicle SET Vehicle_licence = NULLIF('$VL',''), Vehicle_colour = '$colour',
-     Vehicle_type = '$type' WHERE Vehicle_ID = '$V_id';")) {
-         echo("Error description: " . mysqli_error($db));
      }
-
-     if ($VL == "" && $colour == "" && $type == "" ) {
-          $message = "Fields can not be all empty, must at least enter in one field"; }
    }
 
    // this is getting the $p_id form assign_owner.php (person_search.php)
@@ -26,30 +29,32 @@
            $_SESSION["People_ID"] = $_GET['ref_p'];
 
        } else if (isset($_POST['save_p'])) {
-           if (!mysqli_query($db, "UPDATE People SET People_name = '".$_POST['name']."',
-           People_address = '".$_POST['address']."', People_licence = '".$_POST['DL']."'
-           WHERE People_ID = '".$_SESSION["People_ID"]."';")) {
+           if (!mysqli_query($db, "INSERT INTO People VALUES
+               ('', '{$_POST['name']}', '{$_POST['address']}',
+                   '{$_POST['DL']}');"))
+            {
                echo("Error description: " . mysqli_error($db));
-           }
+           } else {
+               $_SESSION["People_ID"] = mysqli_insert_id($db); }
          }
        // if error ** need to do more work
            if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES
            (".$_SESSION["People_ID"].",".$_SESSION['Vehicle_ID'].");")) {
-           echo("Error description: " . mysqli_error($db));
+           echo "Error description: " . mysqli_error($db) ;
            } else {
-           header ("Location: vehicle_edit.php");
+            echo '<script>window.location="vehicle_edit.php"</script>';
        } // it gives Undefined index: error if attempts to search again
     }
 
    // to remove the peron ownership to this vehicle
    if (isset($_GET['del'])){
        mysqli_query($db, "DELETE FROM Ownership WHERE Vehicle_ID = ".$_GET['del'].";");
-       header("Location: vehicle_edit.php"); // have or not have mmm not sure
+       //header("Location: vehicle_edit.php"); // have or not have mmm not sure needed
    }
 
-   $row = mysqli_fetch_assoc(mysqli_query($db,"SELECT * FROM Vehicle WHERE Vehicle_ID = '$V_id';"));
+   $row = mysqli_fetch_assoc(mysqli_query($db,"SELECT * FROM Vehicle WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';"));
    $sub_sql = "SELECT People_name, People_ID FROM People NATURAL join Ownership RIGHT JOIN Vehicle
-               ON vehicle.Vehicle_ID = ownership.Vehicle_ID WHERE vehicle.Vehicle_ID = '$V_id';";
+               ON vehicle.Vehicle_ID = ownership.Vehicle_ID WHERE vehicle.Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';";
    $sub_result = mysqli_query($db, $sub_sql);
    $sub_row = mysqli_fetch_assoc($sub_result);
 
@@ -84,9 +89,9 @@
           <?php
           if (isset($sub_row["People_ID"])){
               echo str_repeat('&nbsp;', 5) .$sub_row['People_name']. "
-              <a href = '?del=$V_id'> [Remove ownership]</a>"; }
+              <a href = '?del={$_SESSION["Vehicle_ID"]}'> [Remove ownership]</a>"; }
            ?></label><br>
-      <div class="text-right"> <label><a href = 'assign_owner.php'> Assign owner to vehicle </a></label></div>
+      <div class="text-right"> <label><a href = 'assign_person.php'> Assign owner to vehicle </a></label></div>
     </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-4">

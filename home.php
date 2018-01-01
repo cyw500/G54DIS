@@ -1,9 +1,6 @@
 <?php
    include('session.php');
-
-   $result = "";
-   $sub_result = "";
-
+   //echo $_SESSION['type'] ." <br>";
     if (isset($_POST['action'])) {
        switch ($_POST['action']) {
             case "Search Person":
@@ -17,12 +14,15 @@
                 break;
 
             case "Add Report":
-                $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] = $_SESSION['Offence_ID'] = "" ;
+                $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] =
+                $_SESSION['Offence_ID'] = $_SESSION['Incident_ID'] = "";
+
+                $_SESSION['Driver'] = $_SESSION['Vehicle'] = $_SESSION['Offence'] =
+                $_SESSION['Incident_Report'] = "";
                 header("Location: add_report.php");
                 break;
     }
 }
-
 ?>
 
     <html>
@@ -85,6 +85,5 @@
             </div>
             </div>
         </form><br>
-        <?php echo $message ?>
     </body>
     </html>

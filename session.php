@@ -2,9 +2,9 @@
    include('config.php');
    session_start();
 
-   $message = "";
-
-   $manage_users = $user_type = "";
+   // need to check if any of these are needed
+   $message = $keyword = $manage_users = $user_type = "";
+   $result = $sub_result = "";
 
    $user_check = $_SESSION['login_user'];
    $ses_sql = mysqli_query($db,"SELECT username, Admin, Officer_ID FROM Officer_access WHERE username = '$user_check';");
@@ -22,8 +22,8 @@
       header("Location: logout.php");
    }
 
-   if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
-    // if last request was more than 60 minutes ago, sent to logout and destroy session
+   if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 600)) {
+    // if last request was more than 10 minutes ago, sent to logout and destroy session
     header("Location: logout.php");
     }
 
@@ -33,6 +33,9 @@
 
 <html>
 <body>
+    <div class="jumbotron text-center">
+         <h1>Police Traffic Records</h1>
+    </div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <p class="navbar-text"> Username :

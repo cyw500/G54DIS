@@ -1,5 +1,4 @@
 <?php
-
    include('config.php');
    session_start();
 
@@ -50,7 +49,9 @@
       </style>
 
    </head>
-
+   <div class="jumbotron text-center">
+        <h1>Police Traffic Records</h1>
+   </div>
    <body bgcolor = "#FFFFFF">
       <div align = "center">
          <div style = "width:350px; border: solid 1px #333333; margin:5%;" align = "left">

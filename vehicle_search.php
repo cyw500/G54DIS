@@ -1,10 +1,10 @@
 <?php
     // removing empty entry
-    mysqli_query($db, "DELETE FROM Vehicle WHERE Vehicle_licence is NULL
-        AND Vehicle_colour = '' AND Vehicle_type = '' ;");
+    // mysqli_query($db, "DELETE FROM Vehicle WHERE Vehicle_licence is NULL
+    //     AND Vehicle_colour = '' AND Vehicle_type = '' ;");
 
-    $sql = "SELECT * FROM Vehicle WHERE Vehicle_licence LIKE '%$keyword%' ORDER BY Vehicle_licence;";
-
+    $sql = "SELECT * FROM Vehicle WHERE Vehicle_licence LIKE '%{$_SESSION['keyword']}%' ORDER BY Vehicle_licence;";
+    //echo $_SESSION['keyword'];
     // only use in getting into view individual vehicle details for edit
     if (isset($_GET['ref_v'])) {
         $sql = "SELECT Vehicle_ID FROM Vehicle WHERE Vehicle_ID = ".$_GET['ref_v'].";";
@@ -17,7 +17,7 @@
     if ($result != "") {
         if ($count == 0) {
 
-            echo "Vehicle plate '$keyword' not found";
+            echo "Vehicle plate '{$_SESSION['keyword']}' not found";
 
         } else {
 
@@ -32,8 +32,7 @@
 
             echo "<ul>";  // start list
             while($row = mysqli_fetch_assoc($result)) {
-                $id = $row["Vehicle_ID"];
-                echo "<li> <a href = '?ref_v=$id'>" . $row["Vehicle_licence"].
+                echo "<li> <a href = '?ref_v=".$row['Vehicle_ID']."'>" . $row["Vehicle_licence"].
                     ": " . $row["Vehicle_colour"]. ", " .$row["Vehicle_type"]."</a>";
                 }
                 echo "</ul>";
