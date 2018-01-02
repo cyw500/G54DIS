@@ -1,14 +1,12 @@
 <?php
    include('session.php');
 
-   $message = "";
-
    if($_SERVER["REQUEST_METHOD"] == "POST")
      {
       $old_password = mysqli_real_escape_string($db,$_POST['old_password']);
       $new_password = mysqli_real_escape_string($db,$_POST['new_password']);
 
-      $sql = "SELECT * FROM Officer_access WHERE username = '$login_session' AND password = '$old_password';";
+      $sql = "SELECT * FROM Officer_access WHERE username = '{$_SESSION['login_user']}' AND password = '$old_password';";
       $result = mysqli_query($db,$sql);
       $row = mysqli_fetch_array($result);
 
@@ -18,9 +16,13 @@
           if(($_POST['new_password'] != "" and $_POST['r_new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
              // send update query to the database
              mysqli_query($db, "UPDATE Officer_access SET password = '$new_password'
-                                WHERE username = '$login_session';");
+                                WHERE username = '{$_SESSION['login_user']}';");
              // auto logout in 2 sec
-             header("refresh:2; url = logout.php");
+             echo "<script>
+                    var timer = setTimeout(function() {
+                    window.location=logout.php'  }, 2000);
+                    </script>" ;
+
              $message = "Password successfully change, please log in again. <br/>
                         You're redirecting to the login.";
 
@@ -85,8 +87,8 @@
         <div align="center">
         <?php echo $message ?>
         </div>
-        <div class="col-sm-10">
-        <a href="home.php" class="btn btn-default pull-right">Back</a>
+        <div class="col-sm-9">
+        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
         </div>
         </div>
     </body>

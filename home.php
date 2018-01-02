@@ -1,26 +1,34 @@
 <?php
    include('session.php');
-   //echo $_SESSION['type'] ." <br>";
+    $_SESSION['where'] = "main search";
     if (isset($_POST['action'])) {
        switch ($_POST['action']) {
             case "Search Person":
                 $_SESSION['keyword'] = mysqli_real_escape_string($db,$_POST['keyword']);
-                header("Location: person.php");
+                $_SESSION['search_type'] = "person";
+                echo '<script>window.location="person.php"</script>';
                 break;
 
             case "Search Vehicles":
                 $_SESSION['keyword'] = mysqli_real_escape_string($db,$_POST['keyword']);
-                header("Location: vehicle.php");
+                $_SESSION['search_type'] = "vehicle";
+                echo '<script>window.location="vehicle.php"</script>';
                 break;
 
             case "Add Report":
+                $_SESSION['Action'] = "Add New";
                 $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] =
                 $_SESSION['Offence_ID'] = $_SESSION['Incident_ID'] = "";
 
                 $_SESSION['Driver'] = $_SESSION['Vehicle'] = $_SESSION['Offence'] =
                 $_SESSION['Incident_Report'] = "";
-                header("Location: add_report.php");
+                echo '<script>window.location="add_report.php"</script>';
                 break;
+
+            case "Add Fine":
+                $_SESSION['Action'] = "Add";
+                $_SESSION['Incident'] = "";
+                echo '<script>window.location="add_fine.php"</script>';
     }
 }
 ?>
@@ -58,10 +66,10 @@
                       <input type="submit" name="action" value="Add Report" class="btn btn-default btn-block"/>
                 </div>
                 <div class="col-sm-2">
-                    <a href="view_report.php" class='btn btn-default btn-block' role='button' style='white-space: normal'>
+                    <a href="view_report.php" class='btn btn-default btn-block' style='white-space: normal'>
                 <?php
                 if ($user_type == "") {
-                    echo "View $login_session reports";
+                    echo "View {$_SESSION['login_user']} reports";
                 } else if ($user_type == "[Administrator]") {
                     echo "View ALL reports"; }
                 ?>
@@ -71,14 +79,14 @@
                 <div class="col-sm-offset-3 col-sm-2">
                 <?php
                 if ($user_type == "[Administrator]"){
-                echo "<a href='add_fine.php' class='btn btn-default btn-block' role='button'>Add Fine </a>";
+                echo "<input type='submit' name='action' value='Add Fine' class='btn btn-default btn-block'></a>";
                 }
                 ?>
                 </div>
                 <div class="col-sm-2">
                 <?php
                 if ($user_type == "[Administrator]"){
-                echo "<a href='view_fines.php' type=button class='btn btn-default btn-block' role='button'>View Fines</a>";
+                echo "<a href='view_fines.php' type=button class='btn btn-default btn-block'>View Fines</a>";
                 }
                 ?>
                 </div>

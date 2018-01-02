@@ -10,6 +10,7 @@
    }
 
     include('search.php');
+
     if (isset($_POST['action'])) {
        switch ($_POST['action']) {
             case "Search ".$_SESSION['type']."":
@@ -19,7 +20,12 @@
 
             case "Add new ".$_SESSION['type']."":
                 $_SESSION["People_ID"] = "";
-                include('person_add.php');
+                if ($_SESSION['where'] == "report") {
+                $_SESSION['Action'] = "Assigning new driver to a report";
+                } if ($_SESSION['where'] == "assign owner") {
+                $_SESSION['Action'] = "Assigning new owner to the vehicle";
+                }
+                echo '<script>window.location="person_edit.php"</script>';
                 break;
             }
     }

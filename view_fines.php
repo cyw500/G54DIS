@@ -5,6 +5,11 @@
    if ($user_type == "") {
        header ("Location: home.php");
    }
+   // if (isset($_GET['ref_i'])) {
+   //     $_SESSION['Action'] = "Edit";
+   //     $_SESSION['Incident_ID'] = $_GET['ref_i'];
+   //     echo '<script>window.location="add_fine.php"</script>';
+   // }
 ?>
 
 <div class="col-sm-offset-1">
@@ -18,7 +23,8 @@
    while($row = mysqli_fetch_assoc($result))
        {
        echo "<li>" . $row["People_name"]. " (" .$row["People_licence"]. ")<br>"
-       . $row["Incident_Date"]." (incident #".$row["Incident_ID"].") - ".$row["Offence_description"].
+       . $row["Incident_Date"]." <a href='?ref_i={$row["Incident_ID"]}'> (incident #".$row["Incident_ID"].")</a>
+        - ".$row["Offence_description"].
        "<br> Fine: £". $row["Fine_Amount"]. " (". $row["Fine_Points"]." points)<br><br><br>" ;
     }
     echo "</ul>";

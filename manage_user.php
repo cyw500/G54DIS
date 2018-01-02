@@ -22,6 +22,7 @@
         }
     </script>
     <div class="container">
+    <div class="col-sm-offset-3">
     <h1> User management</h1>
     <?php
     if (isset($_GET['del']))
@@ -55,21 +56,22 @@
              echo "<tr>
                         <td>". $row["username"]. "</td>
                         <td>". $row["Admin"]."</td>";
-             $id = $row["Officer_ID"];
-             // echo " ID:".$id;
-             //echo "<a href = '?del=$id'> Delete </a>";
+
              echo "<td><button type=button class='btn btn-warning btn-xs'
              onclick=confirmDelete(".$row["Officer_ID"].")>Delete</button></td></tr>";
            }
            echo "</table><br>"; // end of list
       }
     ?>
-    <div class="col-sm-3">
+
+    <div class="col-xs-8 col-sm-6 col-lg-4">
         <a href="add_new_user.php" class="btn btn-default btn-block" style='white-space: normal'>Add new user</a>
     </div>
-        <div class="col-sm-3">
-        <a href="home.php" class="btn btn-default pull-right">Back</a>
+    <br><br>
+        <div class="col-xs-8 col-sm-6 col-lg-4">
+        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
         </div>
     </div>
+</div>
 </body>
 </html>

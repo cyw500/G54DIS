@@ -4,8 +4,8 @@
 <div class="col-sm-offset-1">
 <?php
    if ($user_type == "") {
-       $search = $login_user_id;
-       echo "Incident reports submitted by $login_session : <br><br>";
+       $search = $_SESSION['Officer_ID'];
+       echo "Incident reports submitted by {$_SESSION['login_user']} : <br><br>";
    } else if ($user_type == "[Administrator]") {
        $search = "'%' or Incident.Officer_ID is null" ;
        echo "Incidents: <br><br>";
@@ -38,6 +38,8 @@
 
        $result = mysqli_query($db, $sql);
        $row = mysqli_fetch_assoc($result);
+
+       $_SESSION['Action'] = "Edit";
 
        $_SESSION['People_ID'] = $row["People_ID"];
        $_SESSION['Vehicle_ID'] = $row["Vehicle_ID"];

@@ -1,11 +1,11 @@
 <?php
-    // removing empty entry
-    // mysqli_query($db, "DELETE FROM Vehicle WHERE Vehicle_licence is NULL
-    //     AND Vehicle_colour = '' AND Vehicle_type = '' ;");
-
+    if ($_SESSION['keyword'] == ""){
+    $sql = "SELECT * FROM Vehicle";
+    } else {
     $sql = "SELECT * FROM Vehicle WHERE Vehicle_licence LIKE '%{$_SESSION['keyword']}%' ORDER BY Vehicle_licence;";
-    //echo $_SESSION['keyword'];
-    // only use in getting into view individual vehicle details for edit
+    }
+
+    // Use in getting into view individual vehicle details for edit
     if (isset($_GET['ref_v'])) {
         $sql = "SELECT Vehicle_ID FROM Vehicle WHERE Vehicle_ID = ".$_GET['ref_v'].";";
         }
@@ -17,14 +17,15 @@
     if ($result != "") {
         if ($count == 0) {
 
-            echo "Vehicle plate '{$_SESSION['keyword']}' not found";
+            echo "Vehicle plate '{$_SESSION['keyword']}' not found<br><br>";
 
         } else {
 
         if ($count == 1 && $_SESSION['where'] == "main search") {
 
             $_SESSION["Vehicle_ID"] = mysqli_fetch_assoc($result)["Vehicle_ID"];
-            header ("Location: vehicle_detail.php");
+            echo '<script>window.location="vehicle_detail.php"</script>';
+
 
         } else {
         // if there is more than one return from search

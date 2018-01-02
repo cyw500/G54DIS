@@ -6,7 +6,6 @@
        header ("Location: home.php");
    }
 
-   $message = "";
 ?>
     <html>
     <body>
@@ -24,9 +23,10 @@
                 }
                  if (!mysqli_query($db,"INSERT INTO Officer_access (Admin, username, password)
                     VALUES (NULLIF(".$_POST['admin'].", 0 ) ,'".$_POST['username']."','".$_POST['password']."');")) {
-                        echo("Error description: " . mysqli_error($db));
+                        $message = "<b> Username : '{$_POST['username']}' already exsist <b> ";
+                    } else {
+                        echo '<script>window.location="manage_user.php"</script>';
                     }
-                header ("Location: manage_user.php");
               }
             } else {
                 $message = "Please enter valid username and password"; }
@@ -35,11 +35,11 @@
 
         ?>
         <div class="container">
-            <form action="" method="post">
+            <form action="" method="post" autocomplete="off">
                 <h1> User management</h1> <br>
                 <div class="row">
                  <div class="form-group">
-                  <label class="control-label col-sm-2"> Userame: </label>
+                  <label class="control-label col-sm-2"> Username: </label>
                    <div class="col-sm-5">
                     <input type="text" class="form-control" name="username">
                    </div>
@@ -82,12 +82,12 @@
                     </div>
                 </div>
             </form>
-            <div class="col-sm-offset-3">
+            <div class="col-sm-offset-2">
             <?php echo $message ?>
             </div>
             <br>
         <div class="col-sm-7">
-        <a href="home.php" class="btn btn-default pull-right">Back</a>
+        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
         </div>
         </div>
     </body>

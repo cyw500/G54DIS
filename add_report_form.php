@@ -1,22 +1,20 @@
 <?php
    $_SESSION['where'] = "report";
 
-   if (isset($_POST['action'])) {
-      switch ($_POST['action']) {
+   if (isset($_POST['report_action'])) {
+       $_SESSION['Incident_Report'] = $_POST['I_description'];
+      switch ($_POST['report_action']) {
            case "Add Driver":
-               $_SESSION['Incident_Report'] = $_POST['I_description'];
                $_SESSION['type'] = "driver";
                echo '<script>window.location="assign_person.php"</script>';
                break;
 
            case "Add Vehicle":
-               $_SESSION['Incident_Report'] = $_POST['I_description'];
                $_SESSION['type'] = "vehicle";
                echo '<script>window.location="assign_vehicle.php"</script>';
                break;
 
            case "Add Offence":
-               $_SESSION['Incident_Report'] = $_POST['I_description'];
                $_SESSION['type'] = "offence";
                echo '<script>window.location="offence_search.php"</script>';
                break;
@@ -34,17 +32,22 @@
                    if (!mysqli_query($db, "INSERT INTO Incident
                        (Incident_ID, Vehicle_ID, People_ID, Incident_Date,
                                    Incident_Report, Offence_ID, Officer_ID)
-                       VALUES (NULL, '".$_SESSION['Vehicle_ID']."', '".$_SESSION['People_ID']."', CURRENT_TIMESTAMP,
-                                   '".$_POST['I_description']."','".$_SESSION['Offence_ID']."', $login_user_id );")) {
-                                       echo("Error description: " . mysqli_error($db));
+                       VALUES
+                       (NULL, '".$_SESSION['Vehicle_ID']."', '".$_SESSION['People_ID']."'
+                       , CURRENT_TIMESTAMP, '".$_POST['I_description']."',
+                       '".$_SESSION['Offence_ID']."', {$_SESSION['Officer_ID']} );")) {
+                            echo("Error description: " . mysqli_error($db));
                     } else { // if sussfully sumbit query
                          echo '<script>window.location="view_report.php"</script>';
                       }
 
                 } if ($_SESSION['Incident_ID'] != "") {
-                    if (!mysqli_query($db, "UPDATE Incident SET Vehicle_ID = '{$_SESSION['Vehicle_ID']}',
-                    People_ID = '{$_SESSION['People_ID']}', Incident_Report = '{$_POST['I_description']}',
-                    Offence_ID = '7' WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
+                    if (!mysqli_query($db, "UPDATE Incident SET
+                    Vehicle_ID = '{$_SESSION['Vehicle_ID']}',
+                    People_ID = '{$_SESSION['People_ID']}',
+                    Incident_Report = '{$_POST['I_description']}',
+                    Offence_ID = '{$_SESSION['Offence_ID']}'
+                    WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
                     echo("Error description: " . mysqli_error($db));
                     } else {
                         echo '<script>window.location="view_report.php"</script>';
@@ -53,17 +56,20 @@
            }
        }
 
-    // these are the attaching the driver/vehicle/offence
+    // attaching the driver/vehicle/offence
+    // getting the offence infomations
     if (isset($_GET['ref_o'])) {
         $_SESSION['Offence_ID'] = $_GET['ref_o'];
 
-        $sql = "SELECT Offence_description From Offence WHERE Offence_ID = '{$_SESSION["Offence_ID"]}';";
+        $sql = "SELECT Offence_description From Offence
+                WHERE Offence_ID = '{$_SESSION["Offence_ID"]}';";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         $_SESSION['Offence'] = "{$row['Offence_description']}" ;
 
         echo '<script>window.location="add_report.php"</script>';
 
+    // getting/assigning the person/driver informations
     } if (isset($_GET['ref_p']) || isset($_POST['save_p'])) {
 
         if (isset($_GET['ref_p'])) {
@@ -86,6 +92,7 @@
 
         echo '<script>window.location="add_report.php"</script>';
 
+    // getting/assigning the vehicle informations
     } if (isset($_GET['ref_v']) || isset($_POST['save_v'])) {
 
         if (isset($_GET['ref_v'])) {
@@ -112,7 +119,7 @@
 <html>
 <body>
 <div class="container">
- <h1>Add New Report</h1>
+ <h1><?php echo $_SESSION['Action'] ?> Report</h1>
   <form class="form-horizontal" action="" method="post">
     <div class="form-group">
       <label class="control-label col-sm-2"> Driver: </label>
@@ -123,7 +130,7 @@
           </div>
         </div>
       <div class="col-sm-3">
-        <input type="submit" name="action" class="btn btn-default btn-block" value="Add Driver"/>
+        <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Driver"/>
       </div>
 <!--      <div class="col-sm-3">
             <a href="processor.php" class="btn btn-default btn-block" role="button">Link Button</a>
@@ -142,7 +149,7 @@
           </div>
        </div>
         <div class="col-sm-3">
-          <input type="submit" name="action" class="btn btn-default btn-block" value="Add Vehicle"/>
+          <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Vehicle"/>
         </div>
     </div>
 
@@ -153,7 +160,7 @@
               <?php echo $_SESSION['Offence']?></input>
           </div>
           <div class="col-sm-3">
-              <input type="submit" name="action" class="btn btn-default btn-block" value="Add Offence"/>
+              <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Offence"/>
           </div>
     </div>
 
@@ -196,14 +203,18 @@
     </div>
 
       <div class="col-sm-offset-2 col-sm-4">
-        <input type="submit" name="action" class="btn btn-default btn-block" value="Save" />
+        <input type="submit" name="report_action" class="btn btn-default btn-block" value="Save" />
       </div>
-      <div class="col-sm-offset-2 col-sm-4">
-        <input type="submit" name="action" class="btn btn-default btn-block" value="Cancel" />
-      </div>
+      <?php
+      if ($_SESSION['Action'] == "Add New"){
+      echo "<div class='col-sm-offset-2 col-sm-4'>
+        <input type='submit' name='report_action' class='btn btn-default btn-block' value='Cancel' />
+      </div>";
+      }
+      ?>
 
 
-  <br><br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back</a>
+  <br><br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a>
   </form><br><br>
 </div>
 </body>

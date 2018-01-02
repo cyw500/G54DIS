@@ -27,6 +27,12 @@
 
     $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 
+    echo $_SESSION["where"];
+
+    if (isset($_POST["ok"])){
+        echo "are we in?";
+    if ($_SESSION["where"] == "assign vehicles"){
+        echo '<script>window.location="person_edit.php"</script>';}}
 ?>
 
 <html>
@@ -45,5 +51,14 @@
             </ul>
         </div>
     </nav>
+    <p><?php echo "<font color=red>{$_SESSION['error']}</font>" ?> </p>
+    <form>
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-4">
+        <button type="submit" name="ok" class="btn btn-default btn-block">OK</button>
+      </div>
+  </div>
+</form>
+
 </body>
 </html>

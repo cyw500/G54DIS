@@ -3,17 +3,19 @@
  $username = "root";
  $password = "";
  $dbname = "g54dis2";
- /*
-  $servername = "mysql.cs.nott.ac.uk";
-  $username = "psxcyw";
-  $password = "adv6125h";
-  $dbname = "psxcyw";
- */
+
+  // $servername = "mysql.cs.nott.ac.uk";
+  // $username = "psxcyw";
+  // $password = "adv6125h";
+  // $dbname = "psxcyw";
+
  $db = mysqli_connect($servername, $username, $password, $dbname);;
 
  if($db == false){
 	 die("Network error, fail to connect to police traffic database".mysqli_connect_error());
  }
+
+ $field_message = $message = $manage_users = $user_type = "";
 
  ?>
 

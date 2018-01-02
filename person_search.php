@@ -1,6 +1,4 @@
 <?php
-    // removing empty entry
-    //mysqli_query($db, "DELETE FROM People WHERE People_name = '';");
 
     $sql = "SELECT * FROM People WHERE CONCAT_WS('|', People_name, People_licence)
             LIKE '%{$_SESSION['keyword']}%' ORDER BY People_name;";
