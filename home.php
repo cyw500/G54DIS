@@ -1,5 +1,6 @@
 <?php
    include('session.php');
+
     $_SESSION['where'] = "main search";
     if (isset($_POST['action'])) {
        switch ($_POST['action']) {

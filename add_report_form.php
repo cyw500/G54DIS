@@ -28,32 +28,39 @@
                break;
 
            case "Save":
+               if (($_SESSION['Vehicle_ID'] == "") && ($_SESSION['People_ID'] == "")
+               && ($_SESSION['Offence_ID'] == "") && ($_POST['I_description'] == "")) {
+                   $field_message = "please enter details in one field";
+               } else {
+                    $field_message = "";
                if ($_SESSION['Incident_ID'] == "") {
                    if (!mysqli_query($db, "INSERT INTO Incident
                        (Incident_ID, Vehicle_ID, People_ID, Incident_Date,
                                    Incident_Report, Offence_ID, Officer_ID)
                        VALUES
-                       (NULL, '".$_SESSION['Vehicle_ID']."', '".$_SESSION['People_ID']."'
-                       , CURRENT_TIMESTAMP, '".$_POST['I_description']."',
-                       '".$_SESSION['Offence_ID']."', {$_SESSION['Officer_ID']} );")) {
-                            echo("Error description: " . mysqli_error($db));
-                    } else { // if sussfully sumbit query
+                       (NULL, NULLIF('{$_SESSION['Vehicle_ID']}',''), NULLIF('{$_SESSION['People_ID']}','')
+                       , CURRENT_TIMESTAMP, '{$_POST['I_description']}',
+                       NULLIF('{$_SESSION['Offence_ID']}',''), {$_SESSION['Officer_ID']} );")) {
+                        //    echo("Error description: " . mysqli_error($db));
+                            $message = "<br><br><font color=red>Error</font>" ;
+                    } else { // if sussfully sumbit query redirect to
                          echo '<script>window.location="view_report.php"</script>';
                       }
 
                 } if ($_SESSION['Incident_ID'] != "") {
                     if (!mysqli_query($db, "UPDATE Incident SET
-                    Vehicle_ID = '{$_SESSION['Vehicle_ID']}',
-                    People_ID = '{$_SESSION['People_ID']}',
+                    Vehicle_ID = NULLIF('{$_SESSION['Vehicle_ID']}',''),
+                    People_ID = NULLIF('{$_SESSION['People_ID']}',''),
                     Incident_Report = '{$_POST['I_description']}',
-                    Offence_ID = '{$_SESSION['Offence_ID']}'
+                    Offence_ID = NULLIF('{$_SESSION['Offence_ID']}', '')
                     WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
                     echo("Error description: " . mysqli_error($db));
                     } else {
                         echo '<script>window.location="view_report.php"</script>';
                       }
                   }
-           }
+              }
+       }
        }
 
     // attaching the driver/vehicle/offence
@@ -70,20 +77,8 @@
         echo '<script>window.location="add_report.php"</script>';
 
     // getting/assigning the person/driver informations
-    } if (isset($_GET['ref_p']) || isset($_POST['save_p'])) {
-
-        if (isset($_GET['ref_p'])) {
-            $_SESSION["People_ID"] = $_GET['ref_p'];
-
-        } else if (isset($_POST['save_p'])) {
-            if (!mysqli_query($db, "INSERT INTO People VALUES
-                ('', '{$_POST['name']}', '{$_POST['address']}',
-                    '{$_POST['DL']}');"))
-             {
-                echo("Error description: " . mysqli_error($db));
-            } else {
-                $_SESSION["People_ID"] = mysqli_insert_id($db); }
-          }
+    } if (isset($_GET['ref_p'])) {
+          $_SESSION["People_ID"] = $_GET['ref_p'];
 
           $sql = "SELECT * From People WHERE People_ID = '{$_SESSION["People_ID"]}' ;";
           $result = mysqli_query($db, $sql);
@@ -93,20 +88,9 @@
         echo '<script>window.location="add_report.php"</script>';
 
     // getting/assigning the vehicle informations
-    } if (isset($_GET['ref_v']) || isset($_POST['save_v'])) {
-
-        if (isset($_GET['ref_v'])) {
+    } if (isset($_GET['ref_v'])) {
         $_SESSION['Vehicle_ID'] = $_GET['ref_v'];
 
-        } else if (isset($_POST['save_v'])) {
-            if (!mysqli_query($db, "INSERT INTO Vehicle VALUES ('','{$_POST['type']}',
-                '{$_POST['colour']}', NULLIF('{$_POST['VL']}',''));"))
-            {
-                echo("Error description: " . mysqli_error($db));
-            } else {
-                $_SESSION["Vehicle_ID"] = mysqli_insert_id($db); }
-
-        }
         $sql = "SELECT * From Vehicle WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}' ;";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
@@ -126,18 +110,12 @@
       <div class="col-sm-7">
           <div class="form-control-static">
            <input type="hidden" name= "driver" value="<?php echo $_SESSION['People_ID']?>">
-              <?php echo $_SESSION['Driver']?></input>
+              <?php echo "{$_SESSION['Driver']}{$field_message}"?></input>
           </div>
         </div>
       <div class="col-sm-3">
         <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Driver"/>
       </div>
-<!--      <div class="col-sm-3">
-            <a href="processor.php" class="btn btn-default btn-block" role="button">Link Button</a>
-      </div>
-      <div class="col-sm-2">
-          <button type="button" class="btn btn-primary btn-block">Button 1</button>
-      </div> -->
     </div>
 
     <div class="form-group">
@@ -145,7 +123,7 @@
        <div class="col-sm-7">
           <div class="form-control-static">
               <input type="hidden" name= "vehicle" value="<?php echo $_SESSION['Vehicle_ID']?>">
-              <?php echo $_SESSION['Vehicle']?></input>
+              <?php echo "{$_SESSION['Vehicle']}{$field_message}"?></input>
           </div>
        </div>
         <div class="col-sm-3">
@@ -157,7 +135,7 @@
       <label class="control-label col-sm-2">Offence: </label>
           <div class="col-sm-7">
               <input type="hidden" name= "offence" value="<?php echo $_SESSION['Offence_ID']?>">
-              <?php echo $_SESSION['Offence']?></input>
+              <?php echo "{$_SESSION['Offence']}{$field_message}"?></input>
           </div>
           <div class="col-sm-3">
               <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Offence"/>
@@ -198,7 +176,7 @@
         <label class="control-label col-sm-2">Incident description: </label>
         <div class="col-sm-10">
             <textarea class="form-control" rows="3" name="I_description"
-                placeholder="Enter incident detail"><?php echo $_SESSION['Incident_Report']?></textarea>
+                placeholder='<?php echo $field_message?>'" Enter incident detail" ><?php echo $_SESSION['Incident_Report']?></textarea>
         </div>
     </div>
 
@@ -211,10 +189,12 @@
         <input type='submit' name='report_action' class='btn btn-default btn-block' value='Cancel' />
       </div>";
       }
+
+      echo "<div class='col-sm-offset-3'>$message</div>";
       ?>
 
 
-  <br><br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a>
+  <br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a>
   </form><br><br>
 </div>
 </body>

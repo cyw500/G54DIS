@@ -20,17 +20,18 @@
        }
        if ($_SESSION['where'] == "report") {
            $_SESSION['Driver'] = "{$_POST['name']} ({$_POST['DL']})";
-           $_SESSION['Action'] = "Contine";
+           $_SESSION['Action'] = "Continue";
            echo '<script>window.location="add_report.php"</script>';
        }
         // going back where it come from
         if ($_SESSION["where"] == "assign owner"){
             if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID)
             VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");")) {
-            $message = "The vehicle is already attach to an owner";
+            $message = "<font color=red>The vehicle is already attach to an owner</font>";
 //            $message = "Error description: " . mysqli_error($db) ;
             } else {
-            $_SESSION['where'] = "Edit Vehicle";
+            $_SESSION['Action'] = "Edit Vehicle";
+            $_SESSION["where"] = "edit vehicle";
             echo '<script>window.location="vehicle_edit.php"</script>';
             }
         } if (($_SESSION["where"] == "edit person") or ($_SESSION["where"] == "add new person")) {
@@ -41,14 +42,19 @@
    // this is getting the Vehicle_ID form assign_vehicle.php (sub_page)
    if (isset($_GET['ref_v'])) {
        $_SESSION["Vehicle_ID"] = $_GET['ref_v'];
+       if ($_SESSION["People_ID"] == "") {
+           $message = "<font color=red>Please save the person detail first</font>" ;
+       } if ($_SESSION["People_ID"] != "") {
+       $_SESSION["Vehicle_ID"] = $_GET['ref_v'];
+       $_SESSION["where"] = "edit person";
        if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID)
        VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");"))
        {
-        $message = "Error description: " . mysqli_error($db);
-        // $_SESSION['error'] = "Vehicle is alreay attach to another owner";
-        // echo '<script>window.location="error.php"</script>';
+//        $message = "<font color=red>Error description: " . mysqli_error($db)."</font>";
+       $message = "<font color=red>Error: Vehicle is alreay attach to another owner</font>";
        } else {
        echo '<script>window.location="person_edit.php"</script>';
+        }
        }
    }
 
@@ -88,20 +94,20 @@
       </div>
     </div>
     <!-- list the vehicle belong to the owner -->
-
-     <div class='form-group'>
+    <?php
+    if ($_SESSION["where"] == "edit person"){
+     echo "<div class='form-group'>
       <label class='control-label col-sm-2'>Vehicle: </label>
-      <label class='control-label col-sm-offset'>
-      <?php
+      <label class='control-label col-sm-offset'>";
+
       while($sub_row = mysqli_fetch_assoc($sub_result)){
           echo str_repeat('&nbsp;', 5) .$sub_row["Vehicle_colour"]. ", " . $sub_row["Vehicle_type"].
           " (". $sub_row["Vehicle_licence"]. ") <a href = '?del={$sub_row["Vehicle_ID"]}'> [Remove ownership] </a> <br>" ;
       }
-
       echo "</label><br><div class='text-right'> <label><a href = 'assign_vehicle.php'> Assign vehicle ownership to
-            {$row["People_name"]}"?></a></label></div>
-
-    </div>
+            {$row["People_name"]}</a></label></div>
+    </div>";}
+    ?>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-4">
         <button type="submit" name="save_p" class="btn btn-default btn-block">Save</button>

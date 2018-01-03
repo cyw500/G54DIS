@@ -3,8 +3,7 @@
 
    if ($_SESSION['where'] == "report") {
    include('add_report_form.php');
-   } else { // coming from vehicle edit/add
-   $_SESSION['where'] = "assign owner";
+   } if (($_SESSION["where"] == "edit vehicle") or ($_SESSION["where"] == "add new vehicle")) { // coming from vehicle edit/add
    $_SESSION['type'] = "owner";
    include('vehicle_add.php');
    }
@@ -22,7 +21,8 @@
                 $_SESSION["People_ID"] = "";
                 if ($_SESSION['where'] == "report") {
                 $_SESSION['Action'] = "Assigning new driver to a report";
-                } if ($_SESSION['where'] == "assign owner") {
+                } if (($_SESSION["where"] == "edit vehicle") or ($_SESSION["where"] == "add new vehicle")) {
+                $_SESSION["where"] = "assign owner";
                 $_SESSION['Action'] = "Assigning new owner to the vehicle";
                 }
                 echo '<script>window.location="person_edit.php"</script>';

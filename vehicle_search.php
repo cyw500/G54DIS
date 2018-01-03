@@ -7,8 +7,9 @@
 
     // Use in getting into view individual vehicle details for edit
     if (isset($_GET['ref_v'])) {
+        if ($_SESSION['where'] == "main search"){
         $sql = "SELECT Vehicle_ID FROM Vehicle WHERE Vehicle_ID = ".$_GET['ref_v'].";";
-        }
+    }}
 
     $result = mysqli_query($db, $sql);
     $count = mysqli_num_rows($result);

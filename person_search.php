@@ -5,8 +5,9 @@
 
     // only use in getting into view individual person details for edit
     if (isset($_GET['ref_p'])) {
+        if ($_SESSION['where'] == "main search"){
         $sql = "SELECT People_ID FROM People WHERE People_ID = ".$_GET['ref_p'].";";
-    }
+    }}
 
     $result = mysqli_query($db, $sql);
     $count = mysqli_num_rows($result);

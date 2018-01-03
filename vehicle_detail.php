@@ -28,9 +28,9 @@
             case "Delete":
                 if (!mysqli_query($db, "DELETE FROM Vehicle
                     WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';")) {
-                    $message = "Error: Vehicle is already attached
+                    $message = "<font color=red> Error: Vehicle is already attached
                     to ".$sub_row["People_name"]." (and or) a fine unless these
-                    are remove this vehicle cannot be remove from the database";
+                    are remove this vehicle cannot be remove from the database </font>";
                 // need to set ownswership table delete/update on cascade
             } else { echo " <script>
                                 var timer = setTimeout(function() {

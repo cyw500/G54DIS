@@ -25,8 +25,8 @@
         switch ($_POST['action']) {
             case "Delete":
                 if (!mysqli_query($db, "DELETE FROM People WHERE People_ID = '{$_SESSION["People_ID"]}';")) {
-                    $message = "Error: Vehicle or a fine is attached to ". $row["People_name"]."
-                    unless these are remove {$row["People_name"]} cannot be remove from the database";
+                    $message = "<font color=red> Error: Vehicle or a fine is attached to ". $row["People_name"]."
+                    unless these are remove {$row["People_name"]} cannot be remove from the database </font>";
                 } else { echo " <script>
                                     var timer = setTimeout(function() {
                                             window.location='person.php'

@@ -13,7 +13,7 @@
       $count = mysqli_num_rows($result);
 
       if ($count == 1){
-          if(($_POST['new_password'] != "" and $_POST['r_new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
+          if(($_POST['new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
              // send update query to the database
              mysqli_query($db, "UPDATE Officer_access SET password = '$new_password'
                                 WHERE username = '{$_SESSION['login_user']}';");
@@ -27,13 +27,13 @@
                         You're redirecting to the login.";
 
          } else if ($_POST['new_password'] != $_POST['r_new_password']) {
-              $message = "New password does not match." ;
+              $message = "<font color=red>New password does not match</font>" ;
 
          } else if (isset($_POST['new_password'], $_POST['r_new_password'])) {
-              $message = "Please enter new password, password cannot be empty." ;
+              $message = "<font color=red>Please enter new password, password cannot be empty</font>" ;
          }
      } else {
-         $message = "Invalid entry" ;
+         $message = "<font color=red>Invalid entry</font>" ;
         }
       }
 
@@ -86,7 +86,7 @@
             </form>
         <div align="center">
         <?php echo $message ?>
-        </div>
+    </div><br>
         <div class="col-sm-9">
         <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
         </div>

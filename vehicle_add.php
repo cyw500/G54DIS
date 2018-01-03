@@ -1,6 +1,5 @@
 <?php
 
-
    if (isset($_POST['save_v']))
    // saving the edit and connect to database for an update
    {
@@ -24,19 +23,20 @@
              }
              if ($_SESSION['where'] == "report") {
                  $_SESSION['Vehicle'] = "{$_POST['VL']} ({$_POST['colour']} {$_POST['type']})";
-                 $_SESSION['Action'] = "Contine";
+                 $_SESSION['Action'] = "Continue";
                  echo '<script>window.location="add_report.php"</script>';
              }
              // going back where it come from
-             if ($_SESSION["where"] == "assign vehicles"){
+             if ($_SESSION["where"] == "assign vehicle"){
                  if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES
                          (".$_SESSION["People_ID"].",".$_SESSION['Vehicle_ID'].");")) {
-                        $message = "Error description: " . mysqli_error($db) ;
+                        $message = "<font color=red>Error description: " . mysqli_error($db)."</font>" ;
                     } else {
                         $_SESSION['Action'] = "Edit Person";
+                        $_SESSION["where"] = "edit person";
                         echo '<script>window.location="person_edit.php"</script>';
                     }
-             } if (($_SESSION["where"] == "edit person") || ($_SESSION["where"] == "add new person")) {
+             } if (($_SESSION["where"] == "edit vehicle") or ($_SESSION["where"] == "add new vehicle")) {
              echo '<script>window.location="vehicle_detail.php"</script>';
              }
             }
@@ -45,15 +45,19 @@
    // this is getting the People_ID form assign_owner.php (person_search.php)
    if (isset($_GET['ref_p'])) {
         $_SESSION["People_ID"] = $_GET['ref_p'];
+        if ($_SESSION["Vehicle_ID"] == "") {
+            $message = "<font color=red>Please save the vehicle detail first</font>" ;
+        } if ($_SESSION["Vehicle_ID"] != "") {
+        $_SESSION["where"] = "edit vehicle";
        if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES
        (".$_SESSION["People_ID"].",".$_SESSION['Vehicle_ID'].");")) {
-       $message = "Error description: " . mysqli_error($db) ;
+//       $message = "<font color=red>Error description: " . mysqli_error($db)."</font>" ;
+        $message = "<font color=red>Error: Vehicle is alreay attach to an owner</font>";
        } else {
         echo '<script>window.location="vehicle_edit.php"</script>';
-       } // it gives Undefined index: error if attempts to search again
-// Notice: Undefined index: People_name in C:\xampp\htdocs\G54DIS\psxcyw\person_search.php on line 33
-// Notice: Undefined index: People_address in C:\xampp\htdocs\G54DIS\psxcyw\person_search.php on line 34
-    }
+            }
+        }
+   }
 
    // to remove the peron ownership to this vehicle
    if (isset($_GET['del'])){
@@ -93,18 +97,20 @@
       </div>
     </div>
     <!-- show the owner -->
-    <div class='form-group'>
+    <?php
+    if ($_SESSION["where"] == "edit vehicle"){
+    echo "<div class='form-group'>
       <label class='control-label col-sm-2'>Owner: </label>
-      <label class='control-label col-sm-offset'>
-       <?php
+      <label class='control-label col-sm-offset'>";
+
        if (isset($sub_row["People_ID"])){
           echo str_repeat('&nbsp;', 5) .$sub_row['People_name']. "
           <a href = '?del={$_SESSION["Vehicle_ID"]}'> [Remove ownership]</a>"; }
-        ?></label><br>
+        echo "</label><br>
+        <div class='text-right'> <label><a href = 'assign_person.php'> Assign owner to vehicle </a></label></div>
+    </div>";}
+    ?>
 
-    <div class='text-right'> <label><a href = 'assign_person.php'> Assign owner to vehicle </a></label></div>
-
-    </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-4">
         <button type="submit" name="save_v" class="btn btn-default btn-block">Save</button>

@@ -14,14 +14,15 @@
        }
 
    if (isset($_POST['save'])) {
-
-       if (!mysqli_query($db, "INSERT INTO Fines
-           (Fine_ID, Fine_Amount, Fine_Points, Incident_ID)
-           VALUES
-           (NULL, '".$_POST['fine']."', '".$_POST['points']."', '".$_POST['incident']."');"))
-           { echo("Error description: " . mysqli_error($db));
-        } else { echo '<script>window.location="view_fines.php"</script>';
-          }
+       if ((is_numeric($_POST['fine'])) && (is_numeric($_POST['points']))){
+           if (!mysqli_query($db, "INSERT INTO Fines
+               (Fine_ID, Fine_Amount, Fine_Points, Incident_ID)
+               VALUES
+               (NULL, '".$_POST['fine']."', '".$_POST['points']."', '".$_POST['incident']."');"))
+               { $message = "Error description: " . mysqli_error($db);
+            } else { echo '<script>window.location="view_fines.php"</script>';
+              }
+        } else { $message = "Please enter number only in the Fine and Points textbox"; }
    }
 
    $result = mysqli_query($db, "SELECT People_name, Incident_Date, Offence_description
@@ -76,6 +77,10 @@
         <a href="add_fine.php" class="btn btn-default btn-block">Cancel</a>
       </div>
      </div>
+     <br>
+     <div class="col-sm-offset-2">
+     <?php echo $message ?>
+      </div>
     <div class="row">
     <div class="col-sm-9">
     <br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a><br><br>

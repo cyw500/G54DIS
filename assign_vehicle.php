@@ -2,10 +2,9 @@
    include('session.php');
    if ($_SESSION['where'] == "report") {
    include('add_report_form.php');
-} else  { // coming from person edit/add
+   } if (($_SESSION["where"] == "edit person") or ($_SESSION["where"] == "add new person"))  { // coming from person edit/add
     // if ($_SESSION['where'] == "assign vehicles") need to change at person_add.php
     // currently as it is a link the two $_SESSION should actually be in person_add.php
-   $_SESSION['where'] = "assign vehicles";
    $_SESSION['type'] = "vehicle";
    include('person_add.php');
    }
@@ -27,7 +26,8 @@
                 $_SESSION["Vehicle_ID"] = "";
                 if ($_SESSION['where'] == "report") {
                 $_SESSION['Action'] = "Assigning new vehicle to a report";
-            } if ($_SESSION['where'] == "assign vehicles") {
+                } if (($_SESSION["where"] == "edit person") or ($_SESSION["where"] == "add new person")) {
+                $_SESSION["where"] = "assign vehicle";
                 $_SESSION['Action'] = "Assign new vehicle to a person";
                 }
                 echo '<script>window.location="vehicle_edit.php"</script>';

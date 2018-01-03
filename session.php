@@ -2,6 +2,9 @@
    include('config.php');
    session_start();
 
+   print_r($_SESSION);
+   echo "<br><br>";
+
    // Checking type of user and other information
    $sql = "SELECT username, Admin, Officer_ID FROM Officer_access
             WHERE username = '{$_SESSION['login_user']}';";
