@@ -2,8 +2,8 @@
    include('config.php');
    session_start();
 
-   print_r($_SESSION);
-   echo "<br><br>";
+   // print_r($_SESSION);
+   // echo "<br><br>";
 
    // Checking type of user and other information
    $sql = "SELECT username, Admin, Officer_ID FROM Officer_access
@@ -11,7 +11,6 @@
    $ses_sql = mysqli_query($db,$sql);
    $row = mysqli_fetch_array($ses_sql);
    $_SESSION['login_user'] = $row['username'];
-   $_SESSION['Officer_ID'] = $row['Officer_ID'];
 
    if (isset($row['Admin'])){
        // if $user_type is not Null / = Admin set variable to string for disply

@@ -31,6 +31,8 @@
        $sql="DELETE FROM Officer_access WHERE Officer_ID = ".$_GET['del'].";" ;
        // send query to database
        $result = mysqli_query($db, $sql);
+
+       echo '<script>window.location="manage_user.php"</script>';
      }
 
         // construct the SELECT query

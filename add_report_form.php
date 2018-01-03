@@ -1,7 +1,16 @@
 <?php
    $_SESSION['where'] = "report";
 
+   echo time();
+   echo "<br>";
+   echo strtotime("yesterday");
+   echo "<br>";
+   echo strtotime($_SESSION['datetime']);
+   echo "<br>";
+   echo date("Y-m-d\TH:i",strtotime($_SESSION['datetime']."-14days"));
+
    if (isset($_POST['report_action'])) {
+       $_SESSION['datetime'] = $_POST['datetime'];
        $_SESSION['Incident_Report'] = $_POST['I_description'];
       switch ($_POST['report_action']) {
            case "Add Driver":
@@ -19,7 +28,7 @@
                echo '<script>window.location="offence_search.php"</script>';
                break;
 
-           case "Cancel":
+           case "Reset":
                $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] =
                $_SESSION['Offence_ID'] = "" ;
 
@@ -30,19 +39,19 @@
            case "Save":
                if (($_SESSION['Vehicle_ID'] == "") && ($_SESSION['People_ID'] == "")
                && ($_SESSION['Offence_ID'] == "") && ($_POST['I_description'] == "")) {
-                   $field_message = "please enter details in one field";
+                   $field_message = "please enter details in at least one field";
                } else {
                     $field_message = "";
                if ($_SESSION['Incident_ID'] == "") {
                    if (!mysqli_query($db, "INSERT INTO Incident
                        (Incident_ID, Vehicle_ID, People_ID, Incident_Date,
-                                   Incident_Report, Offence_ID, Officer_ID)
+                                   Incident_Report, Offence_ID, Officer)
                        VALUES
                        (NULL, NULLIF('{$_SESSION['Vehicle_ID']}',''), NULLIF('{$_SESSION['People_ID']}','')
-                       , CURRENT_TIMESTAMP, '{$_POST['I_description']}',
-                       NULLIF('{$_SESSION['Offence_ID']}',''), {$_SESSION['Officer_ID']} );")) {
+                       , '{$_SESSION['datetime']}', '{$_POST['I_description']}',
+                       NULLIF('{$_SESSION['Offence_ID']}',''), '{$_SESSION['login_user']}' );")) {
                         //    echo("Error description: " . mysqli_error($db));
-                            $message = "<br><br><font color=red>Error</font>" ;
+                            $message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
                     } else { // if sussfully sumbit query redirect to
                          echo '<script>window.location="view_report.php"</script>';
                       }
@@ -54,7 +63,7 @@
                     Incident_Report = '{$_POST['I_description']}',
                     Offence_ID = NULLIF('{$_SESSION['Offence_ID']}', '')
                     WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
-                    echo("Error description: " . mysqli_error($db));
+                    $message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
                     } else {
                         echo '<script>window.location="view_report.php"</script>';
                       }
@@ -141,9 +150,18 @@
               <input type="submit" name="report_action" class="btn btn-default btn-block" value="Add Offence"/>
           </div>
     </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">Datetime: </label>
+          <div class="col-sm-7">
+              <input type="datetime-local" name="datetime"
+                min="<?php echo date("Y-m-d\TH:i",strtotime($_SESSION['datetime']."-14days"))?>"
+                max="<?php echo $_SESSION['datetime']?>" class='form-control'
+                value="<?php echo $_SESSION['datetime'] ?>">
+          </div>
+    </div>
 
-
-<!--    <div class="form-group">
+<!--    https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_type_datetime-local
+<div class="form-group">
       <label class="control-label col-sm-2">Datetime: </label>
       <div class="col-sm-7">
         <div class="input-group date" id="datetime" >
@@ -183,17 +201,10 @@
       <div class="col-sm-offset-2 col-sm-4">
         <input type="submit" name="report_action" class="btn btn-default btn-block" value="Save" />
       </div>
-      <?php
-      if ($_SESSION['Action'] == "Add New"){
-      echo "<div class='col-sm-offset-2 col-sm-4'>
-        <input type='submit' name='report_action' class='btn btn-default btn-block' value='Cancel' />
-      </div>";
-      }
-
-      echo "<div class='col-sm-offset-3'>$message</div>";
-      ?>
-
-
+      <div class='col-sm-offset-2 col-sm-4'>
+        <input type='submit' name='report_action' class='btn btn-default btn-block' value='Reset' />
+      </div>
+      <div class='col-sm-offset-3'><?php echo $message ?></div>
   <br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a>
   </form><br><br>
 </div>

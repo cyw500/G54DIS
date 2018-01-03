@@ -116,7 +116,7 @@
         <button type="submit" name="save_v" class="btn btn-default btn-block">Save</button>
       </div>
     <div class="col-sm-offset-2 col-sm-4">
-      <button type="reset" class="btn btn-default btn-block">Cancel</button>
+      <button type="reset" class="btn btn-default btn-block">Reset</button>
     </div>
     </div>
     <div class="col-sm-offset-2">

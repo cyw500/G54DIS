@@ -20,6 +20,7 @@
                 $_SESSION['Action'] = "Add New";
                 $_SESSION['People_ID'] = $_SESSION['Vehicle_ID'] =
                 $_SESSION['Offence_ID'] = $_SESSION['Incident_ID'] = "";
+                $_SESSION['datetime'] = date("Y-m-d\TH:i", time());
 
                 $_SESSION['Driver'] = $_SESSION['Vehicle'] = $_SESSION['Offence'] =
                 $_SESSION['Incident_Report'] = "";
@@ -93,6 +94,7 @@
                 </div>
             </div>
             </div>
+
         </form><br>
     </body>
     </html>

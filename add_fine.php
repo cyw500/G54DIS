@@ -14,15 +14,13 @@
        }
 
    if (isset($_POST['save'])) {
-       if ((is_numeric($_POST['fine'])) && (is_numeric($_POST['points']))){
            if (!mysqli_query($db, "INSERT INTO Fines
                (Fine_ID, Fine_Amount, Fine_Points, Incident_ID)
                VALUES
                (NULL, '".$_POST['fine']."', '".$_POST['points']."', '".$_POST['incident']."');"))
-               { $message = "Error description: " . mysqli_error($db);
+               { $message = "Select an incident to submit a fine";
             } else { echo '<script>window.location="view_fines.php"</script>';
               }
-        } else { $message = "Please enter number only in the Fine and Points textbox"; }
    }
 
    $result = mysqli_query($db, "SELECT People_name, Incident_Date, Offence_description
@@ -59,22 +57,22 @@
     <div class="form-group">
       <label class="control-label col-sm-2"> Fine: </label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" name="fine">
+        <input type="number" class="form-control" name="fine" min='0'>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-2"> Points: </label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" name="points">
+        <input type="number" class="form-control" name="points" min="1" max="12">
       </div>
     </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-2">
         <button type="submit" name="save" class="btn btn-default btn-block">Save</button>
       </div>
-      <!-- cheating using redirect instead of reset -->
+      <!-- reseting page -->
       <div class="col-sm-offset-3 col-sm-2">
-        <a href="add_fine.php" class="btn btn-default btn-block">Cancel</a>
+        <a href="add_fine.php" class="btn btn-default btn-block">Reset</a>
       </div>
      </div>
      <br>

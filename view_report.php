@@ -4,10 +4,10 @@
 <div class="col-sm-offset-1">
 <?php
    if ($user_type == "") {
-       $search = $_SESSION['Officer_ID'];
+       $search = $_SESSION['login_user'];
        echo "Incident reports submitted by {$_SESSION['login_user']} : <br><br>";
    } else if ($user_type == "[Administrator]") {
-       $search = "'%' or Incident.Officer_ID is null" ;
+       $search = "%" ;
        echo "Incidents: <br><br>";
    }
 
@@ -21,8 +21,8 @@
            LEFT JOIN People ON People.People_ID = Incident.People_ID
            LEFT JOIN Vehicle ON Vehicle.Vehicle_ID = Incident.Vehicle_ID
            LEFT JOIN Offence ON Offence.Offence_ID = Incident.Offence_ID
-           LEFT JOIN Officer_access ON Officer_access.Officer_ID = Incident.Officer_ID
-           WHERE Incident.Officer_ID LIKE $search ORDER BY Incident_Date DESC;";
+           LEFT JOIN Officer_access ON Officer_access.username = Incident.Officer
+           WHERE Incident.Officer LIKE '$search' ORDER BY Incident_Date DESC;";
 
    $result = mysqli_query($db, $sql);
 
@@ -33,7 +33,7 @@
                LEFT JOIN People ON People.People_ID = Incident.People_ID
                LEFT JOIN Vehicle ON Vehicle.Vehicle_ID = Incident.Vehicle_ID
                LEFT JOIN Offence ON Offence.Offence_ID = Incident.Offence_ID
-               LEFT JOIN Officer_access ON Officer_access.Officer_ID = Incident.Officer_ID
+               LEFT JOIN Officer_access ON Officer_access.username = Incident.Officer
                WHERE Incident_ID = '{$_SESSION['Incident_ID']}' ORDER BY Incident_Date DESC;";
 
        $result = mysqli_query($db, $sql);
@@ -44,6 +44,7 @@
        $_SESSION['People_ID'] = $row["People_ID"];
        $_SESSION['Vehicle_ID'] = $row["Vehicle_ID"];
        $_SESSION['Offence_ID'] = $row["Offence_ID"];
+       $_SESSION['datetime'] = date('Y-m-d\TH:i', strtotime($row['Incident_Date']));
 
        $_SESSION['Driver'] = "{$row["People_name"]} ({$row["People_licence"]})" ;
        $_SESSION['Vehicle'] = "{$row["Vehicle_licence"]} ({$row["Vehicle_colour"]} {$row['Vehicle_type']})" ;
@@ -57,7 +58,7 @@
        {
        echo "<li> <a href = '?ref_r=".$row['Incident_ID']."'>". $row["Incident_Date"]. "</a>";
        if ($user_type == "[Administrator]") {
-           echo str_repeat('&nbsp;', 5)." Officer: <font color=blue>" . $row["username"]. "</font>";
+           echo str_repeat('&nbsp;', 5)." Officer: <font color=blue>" . $row["Officer"]. "</font>";
        }
        echo "<br> Name: " .$row["People_name"].
        "<br> Vehicle: ". $row["Vehicle_licence"]." - ".$row["Vehicle_colour"]." ".$row["Vehicle_type"].
