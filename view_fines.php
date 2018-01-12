@@ -15,8 +15,10 @@
 <div class="col-sm-offset-1">
 <?php
    // shouldnt use select * , select whatever needed only
-   $result = mysqli_query($db, "SELECT * FROM Fines NATURAL JOIN People
-       NATURAL JOIN Incident NATURAL JOIN Offence ORDER BY Incident_Date DESC");
+   $result = mysqli_query($db, "SELECT People_name, People_licence, Incident_Date,
+       Incident_ID, Offence_description, Fine_Amount, Fine_Points
+       FROM Fines NATURAL JOIN People NATURAL JOIN Incident NATURAL JOIN Offence
+       ORDER BY Incident_Date DESC");
 
    echo "Fines: <br><br>";
    echo "<ul class=list-unstyled>" ;  // start list

@@ -14,6 +14,7 @@
         . $row["Vehicle_colour"]. "<br> Type: " . $row["Vehicle_type"].
         "<br><br>";
 
+    // displaying owner information
     echo "Owner: ";
         if (isset($sub_row["People_ID"])){
         $_SESSION["People_ID"] = $sub_row["People_ID"];
@@ -28,8 +29,8 @@
             case "Delete":
                 if (!mysqli_query($db, "DELETE FROM Vehicle
                     WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';")) {
-                    $message = "<font color=red> Error: Vehicle is already attached
-                    to ".$sub_row["People_name"]." (and or) a fine unless these
+                    $message = "<font color=red> Error: Vehicle is attached
+                    to an owner or an incident unless these
                     are remove this vehicle cannot be remove from the database </font>";
                 // need to set ownswership table delete/update on cascade
             } else { echo " <script>

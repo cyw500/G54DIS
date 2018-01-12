@@ -1,30 +1,34 @@
 <?php
    include('session.php');
 
-   if($_SERVER["REQUEST_METHOD"] == "POST")
+   if(isset($_POST["submit"]))
      {
       $old_password = mysqli_real_escape_string($db,$_POST['old_password']);
       $new_password = mysqli_real_escape_string($db,$_POST['new_password']);
 
-      $sql = "SELECT * FROM Officer_access WHERE username = '{$_SESSION['login_user']}' AND password = '$old_password';";
+      $sql = "SELECT username FROM Officer_access WHERE username = '{$_SESSION['login_user']}' AND password = '$old_password';";
       $result = mysqli_query($db,$sql);
-      $row = mysqli_fetch_array($result);
 
       $count = mysqli_num_rows($result);
 
       if ($count == 1){
           if(($_POST['new_password'] != "") && $_POST['new_password'] == $_POST['r_new_password']) {
+
+            if ($new_password === $old_password){
+                $message = "<font color=red>Old password cannot be the same as new password</font>";
+            } if ($new_password !== $old_password){
              // send update query to the database
              mysqli_query($db, "UPDATE Officer_access SET password = '$new_password'
                                 WHERE username = '{$_SESSION['login_user']}';");
-             // auto logout in 2 sec
+             // auto logout in 2 sec.
              echo "<script>
                     var timer = setTimeout(function() {
-                    window.location=logout.php'  }, 2000);
+                    window.location='logout.php'  }, 2000);
                     </script>" ;
 
              $message = "Password successfully change, please log in again. <br/>
                         You're redirecting to the login.";
+            }
 
          } else if ($_POST['new_password'] != $_POST['r_new_password']) {
               $message = "<font color=red>New password does not match</font>" ;
@@ -77,7 +81,7 @@
                 <br>
                 <div class="row">
                     <div class="col-sm-offset-4 col-sm-2">
-                        <input type="submit" class="btn btn-default btn-block" value="OK">
+                        <input type="submit" name="submit" class="btn btn-default btn-block" value="OK">
                     </div>
                     <div class="col-sm-offset-1 col-sm-2">
                         <input type="reset" class="btn btn-default btn-block" value="Cancel">
@@ -86,10 +90,7 @@
             </form>
         <div align="center">
         <?php echo $message ?>
-    </div><br>
-        <div class="col-sm-9">
-        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
-        </div>
+    </div>
         </div>
     </body>
 

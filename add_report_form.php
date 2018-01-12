@@ -1,30 +1,19 @@
 <?php
    $_SESSION['where'] = "report";
 
-   echo time();
-   echo "<br>";
-   echo strtotime("yesterday");
-   echo "<br>";
-   echo strtotime($_SESSION['datetime']);
-   echo "<br>";
-   echo date("Y-m-d\TH:i",strtotime($_SESSION['datetime']."-14days"));
-
    if (isset($_POST['report_action'])) {
        $_SESSION['datetime'] = $_POST['datetime'];
        $_SESSION['Incident_Report'] = $_POST['I_description'];
       switch ($_POST['report_action']) {
            case "Add Driver":
-               $_SESSION['type'] = "driver";
                echo '<script>window.location="assign_person.php"</script>';
                break;
 
            case "Add Vehicle":
-               $_SESSION['type'] = "vehicle";
                echo '<script>window.location="assign_vehicle.php"</script>';
                break;
 
            case "Add Offence":
-               $_SESSION['type'] = "offence";
                echo '<script>window.location="offence_search.php"</script>';
                break;
 
@@ -151,7 +140,7 @@
           </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2">Datetime: </label>
+      <label class="control-label col-sm-2">Incident datetime: </label>
           <div class="col-sm-7">
               <input type="datetime-local" name="datetime"
                 min="<?php echo date("Y-m-d\TH:i",strtotime($_SESSION['datetime']."-14days"))?>"
@@ -159,36 +148,6 @@
                 value="<?php echo $_SESSION['datetime'] ?>">
           </div>
     </div>
-
-<!--    https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_type_datetime-local
-<div class="form-group">
-      <label class="control-label col-sm-2">Datetime: </label>
-      <div class="col-sm-7">
-        <div class="input-group date" id="datetime" >
-           <input type="text" name="datetime" class="form-control" readonly/>
-           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-2">Datetime: </label>
-        <div class='col-sm-7'>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-        </script>
-    </div> -->
 
     <div class="form-group">
         <label class="control-label col-sm-2">Incident description: </label>
@@ -205,8 +164,8 @@
         <input type='submit' name='report_action' class='btn btn-default btn-block' value='Reset' />
       </div>
       <div class='col-sm-offset-3'><?php echo $message ?></div>
-  <br><br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a>
-  </form><br><br>
+  <br>
+  </form><br>
 </div>
 </body>
 </html>

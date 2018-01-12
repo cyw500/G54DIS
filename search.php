@@ -16,7 +16,7 @@
             </div>
         </div>
         <?php
-        if ($_SESSION['type'] != "offence"){
+        if (($_SESSION['type'] != "offence") && ($_SESSION['type'] != "incident")){
         echo "
         <div class='col-sm-2'>
             <div class='btn-group btn-group-justified'>

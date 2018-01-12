@@ -10,8 +10,7 @@
     <html>
     <body>
         <?php
-        if($_SERVER["REQUEST_METHOD"] == "POST")
-          {
+
           if (isset($_POST['add'])) {
             if ($_POST['username'] != "" && $_POST['password'] != "") {
               if ($_POST['password'] != $_POST['r_password']) {
@@ -31,7 +30,7 @@
             } else {
                 $message = "Please enter valid username and password"; }
           }
-        }
+
 
         ?>
         <div class="container">
@@ -85,10 +84,6 @@
             <div class="col-sm-offset-2">
             <?php echo $message ?>
             </div>
-            <br>
-        <div class="col-sm-7">
-        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
-        </div>
         </div>
     </body>
 

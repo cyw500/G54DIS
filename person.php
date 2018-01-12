@@ -1,7 +1,6 @@
 <?php
     include('home.php');
     include('person_search.php');
-
 ?>
 <html>
 <body>

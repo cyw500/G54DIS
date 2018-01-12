@@ -1,4 +1,4 @@
-<?php
+ <?php
     include('home.php');
 
     $sql = "SELECT * FROM People WHERE People_ID = '{$_SESSION["People_ID"]}';";
@@ -25,7 +25,7 @@
         switch ($_POST['action']) {
             case "Delete":
                 if (!mysqli_query($db, "DELETE FROM People WHERE People_ID = '{$_SESSION["People_ID"]}';")) {
-                    $message = "<font color=red> Error: Vehicle or a fine is attached to ". $row["People_name"]."
+                    $message = "<font color=red> Error: Vehicle or an incident is attached to ". $row["People_name"]."
                     unless these are remove {$row["People_name"]} cannot be remove from the database </font>";
                 } else { echo " <script>
                                     var timer = setTimeout(function() {

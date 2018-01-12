@@ -1,7 +1,6 @@
 <?php
    include('session.php');
 
-   // need to add error message too!!!
    // database change Incident_ID is Unique which meant each incident can only be fine once
    $_SESSION['Incident_ID'] = "";
    // if user arent admin redirect page
@@ -40,7 +39,7 @@
 <div class="col-sm-offset-1">
 <h1><?php echo $_SESSION['Action']?> Fine</h1>
 </div>
-<form class="form-horizontal" action="" method="post">
+<form class="form-horizontal" action="" method="post" autocomplete="off">
     <div class="form-group">
       <label class="control-label col-sm-2"> Incident: </label>
       <div class="col-sm-5">
@@ -63,7 +62,7 @@
     <div class="form-group">
       <label class="control-label col-sm-2"> Points: </label>
       <div class="col-sm-5">
-        <input type="number" class="form-control" name="points" min="1" max="12">
+        <input type="number" class="form-control" name="points" min="0" max="12">
       </div>
     </div>
     <div class="row">
@@ -79,11 +78,6 @@
      <div class="col-sm-offset-2">
      <?php echo $message ?>
       </div>
-    <div class="row">
-    <div class="col-sm-9">
-    <br><a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a><br><br>
-    </div>
-    </div>
 </form>
 </div>
 

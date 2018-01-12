@@ -1,0 +1,224 @@
+
+Software require:
+MySQL
+A web host with PHP and MySQL support
+HTML5 supporting browser
+
+Database:
+
+-	Database will contain 7 tables (Fines, Incident, Offence, Officer_access, Ownership, People, Vehicle). The database is design to contain information for all relevant information to a police traffic offence. Table is split in a way to minimise the information duplication.
+-	Vehicle table contain vehicle information containing column Vehicle_ID, Vehicle_type, Vehicle_colour, Vehicle_licence. The Vehicle_ID being the primary key.
+-	People table contain person information containing column People_ID, People_name, People_address, People_licence. The People_ID being the primary key.
+-	Ownership table contain column Vehicle_ID and People_ID which link a person (owner) to vehicles. The Vehicle_ID being the primary key in Ownership table. As each vehicle can only have one owner.
+-	Officer_access table contain column username, password, Admin. The username is the primary key. This table is used to check against at upon login to grant access to the database. Admin column use for identify user type.
+-	Offence table contain column Offence_ID, Offence_description, Offence_maxFine, Offence_maxPoints. The Offence_ID being the primary key. Where the description of vehicle offence and the maximum fine/point for reference of penalty.
+-	Incident table contain column Incident_ID, Vehicle_ID, People_ID, Incident_Date, Incident_Report, Offence_ID, Officer. The Incident_ID being the primary key. Vehicle_ID, People_ID, Offence_ID are foreign key referencing Vehicle table, People table, Offence table respectively. Officer column records the officer enter the incident report. No key should be assign to this column, the report able so see who enter the report but able to keep separate of currently who can access the police traffic database. This table also record any vehicle incident information , description on Incident_Report column and the datetime on Incident_Date column.
+-	Fines table contain column Fine_ID, Fine_Amount, Fine_Points, Incident_ID. The Fine_ID being the primary key. Incident_ID are foreign key referencing Incident table. This table records the fine (Fine_Amount column) and penalty points(Fine_Points column) give to a person committed an offence.
+
+SQL queries:
+-	login.php:
+    SELECT username FROM Officer_access WHERE username = '$myusername' and password = '$mypassword'
+    - This query check the input username and password which been set as variable $myusername and $mypassword against the database if a row ,exactly one row ,return access to database granted.
+
+-	session.php:
+    SELECT username, Admin FROM Officer_access WHERE username = '{$_SESSION['login_user']}';
+    - Projecting username and Admin column from officer_access table where username is the session login user to check and validate the session and check if user is Admin.
+
+-	change_password.php:
+    SELECT username FROM Officer_access WHERE username = '{$_SESSION['login_user']}' AND password = '$old_password'
+    - Check against the old password if a row return it mean the password enter is correct.
+
+    UPDATE Officer_access SET password = '$new_password' WHERE username = '{$_SESSION['login_user']}'
+    - Updating the Officer_access table to update password to a new password enter by the user where username is the session login user.
+
+-	manage_user.php:
+    DELETE FROM Officer_access WHERE username = '".$_GET['del']."'
+    - This query remove user ,row , from Officer_access table where the username is equal to a username get from a link
+    SELECT username, Admin FROM Officer_access ORDER BY username;
+    - Selecting username and Admin column from officer_access table order by username (alphabetically) for display all the users.
+
+-	add_new_user.php:
+    INSERT INTO Officer_access (Admin, username, password) VALUES (NULLIF(".$_POST['admin'].", 0 ) ,'".$_POST['username']."','".$_POST['password']."')
+    - Insert a new entry into table Officer_access with data entry from user.
+
+-	view_fines.php:
+    *SELECT People_name, People_licence, Incident_Date, Incident_ID, Offence_description, Fine_Amount, Fine_Points FROM Fines NATURAL JOIN People NATURAL JOIN Incident NATURAL JOIN Offence ORDER BY Incident_Date DESC
+    - Projecting fines given to person committed an offence sorted the incident date by descending order.
+
+-	add_fine.php:
+    INSERT INTO Fines (Fine_ID, Fine_Amount, Fine_Points, Incident_ID) VALUES (NULL, '".$_POST['fine']."', '".$_POST['points']."', '".$_POST['incident']."')
+    - Inserting into fine table according user entry
+
+    SELECT People_name, Incident_Date, Offence_description FROM Incident NATURAL JOIN People NATURAL JOIN Offence WHERE Incident_ID = '{$_SESSION['Incident_ID']}'
+    - Projecting and incident a person committed an offence to all the completion of the adding fine.
+
+
+-	view_report.php:
+    SELECT * FROM Incident
+        LEFT JOIN People ON People.People_ID = Incident.People_ID
+        LEFT JOIN Vehicle ON Vehicle.Vehicle_ID = Incident.Vehicle_ID
+        LEFT JOIN Offence ON Offence.Offence_ID = Incident.Offence_ID
+        LEFT JOIN Officer_access ON Officer_access.username = Incident.Officer
+        WHERE Incident.Officer LIKE '$search' ORDER BY Incident_Date DESC;
+    - Projecting incident(reports) base on the officer
+
+    SELECT * FROM Incident
+        LEFT JOIN People ON People.People_ID = Incident.People_ID
+        LEFT JOIN Vehicle ON Vehicle.Vehicle_ID = Incident.Vehicle_ID
+        LEFT JOIN Offence ON Offence.Offence_ID = Incident.Offence_ID
+        LEFT JOIN Officer_access ON Officer_access.username = Incident.Officer
+        WHERE Incident_ID = '{$_SESSION['Incident_ID']}' ORDER BY Incident_Date DESC;
+    - Projecting an incident(reports)
+
+-	add_report_form.php:
+    INSERT INTO Incident
+    (Incident_ID, Vehicle_ID, People_ID, Incident_Date, Incident_Report, Offence_ID, Officer)
+    VALUES
+    (NULL, NULLIF('{$_SESSION['Vehicle_ID']}',''), NULLIF('{$_SESSION['People_ID']}','')
+    , '{$_SESSION['datetime']}', '{$_POST['I_description']}',
+    NULLIF('{$_SESSION['Offence_ID']}',''), '{$_SESSION['login_user']}' );
+    - Adding an entry to incident table base on user input
+
+    UPDATE Incident SET
+    Vehicle_ID = NULLIF('{$_SESSION['Vehicle_ID']}',''),
+    People_ID = NULLIF('{$_SESSION['People_ID']}',''),
+    Incident_Report = '{$_POST['I_description']}',
+    Offence_ID = NULLIF('{$_SESSION['Offence_ID']}', '')
+    WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';
+    - Updating an entry to incident table base on user input
+
+-   offence_search.php:
+    SELECT * FROM Offence WHERE Offence_description LIKE '%{$_POST['offence_search']}%' ORDER BY Offence_description DESC
+    - Projecting an offence base on search word enter by user.
+
+-   search_incident.php:
+    SELECT Incident.Incident_ID as IIncident_ID, Incident_Date,
+       Offence_description, People_name, People_address, People_licence
+       FROM Incident NATURAL JOIN People NATURAL JOIN Offence
+       LEFT JOIN Fines ON Fines.Incident_ID = Incident.Incident_ID
+       WHERE Fine_ID is NULL AND CONCAT_WS('|', People_name, People_licence)
+       LIKE '%".$_POST['incident_search']."%' ORDER BY Incident_Date DESC
+    - Projecting incident details from incident table base on search word entered
+
+-	people_search.php:
+    SELECT * FROM People WHERE CONCAT_WS('|', People_name, People_licence) LIKE '%{$_SESSION['keyword']}%' ORDER BY People_name
+    - Projecting person detail from people table base on search word entered
+
+    SELECT People_ID FROM People WHERE People_ID = ".$_GET['ref_p']."
+    - Projecting person detail from people table base on a particular person with People_ID
+
+-	vehicle_search.php:
+    SELECT * FROM Vehicle
+    - Projecting all Vehicle include Vehicle_licence is NULL
+
+    SELECT * FROM Vehicle WHERE Vehicle_licence LIKE '%{$_SESSION['keyword']}%' ORDER BY Vehicle_licence
+    - Projecting vehicle detail from people table base on search word entered
+
+    SELECT Vehicle_ID FROM Vehicle WHERE Vehicle_ID = ".$_GET['ref_v']."
+    - Projecting person detail from vehicle table base on a particular vehicle with Vehicle_ID
+
+-   person_detail.php:
+    SELECT * FROM People WHERE People_ID = '{$_SESSION["People_ID"]}'
+    - Projecting person detail from people table base on a particular person with People_ID
+
+    SELECT * FROM People NATURAL JOIN Ownership NATURAL JOIN Vehicle WHERE People.People_ID = '{$_SESSION["People_ID"]}'
+    - Projecting vehicle detail with a vehicle with a particular People_ID
+
+    DELETE FROM People WHERE People_ID = '{$_SESSION["People_ID"]}'
+    - Removing a person from people table with a person with a particular People_ID
+
+-   person_add.php:
+    INSERT INTO People VALUES ('', '{$_POST['name']}', '{$_POST['address']}', '{$_POST['DL']}')
+    - Adding an entry to people table base on user input
+
+    UPDATE People SET People_name = '{$_POST['name']}', People_address = '{$_POST['address']}', People_licence = '{$_POST['DL']}' WHERE People_ID = '{$_SESSION['People_ID']}';
+    - Updating a person, with a particular People_ID, entry people table base on user input
+
+    INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].")
+    - Adding an entry to ownership table of a particular People_ID and Vehicle_ID
+
+    DELETE FROM Ownership WHERE Vehicle_ID = ".$_GET['del'].";
+    - Removing an entry from ownership table of with a particular Vehicle_ID
+
+    SELECT * FROM People WHERE People_ID = '{$_SESSION['People_ID']}'
+    - Projecting a person detail from people table with a particular People_ID
+
+    SELECT * FROM People NATURAL JOIN Ownership NATURAL JOIN Vehicle WHERE People.People_ID = '{$_SESSION['People_ID']}'
+    - Projecting vehicle detail associate with a owner by a person's People_ID
+
+-   vehicle_detail.php:
+    SELECT * FROM Vehicle WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}
+    - Projecting vehicle detail from Vehicle table base on a particular person with Vehicle_ID
+
+    SELECT * FROM People NATURAL join Ownership RIGHT JOIN Vehicle ON Vehicle.Vehicle_ID = Ownership.Vehicle_ID WHERE Vehicle.Vehicle_ID = '{$_SESSION["Vehicle_ID"]}'
+    - Projecting an owner detail with a vehicle with a particular Vehicle_ID
+
+    DELETE FROM Vehicle WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}';
+    - Removing a vehicle from Vehicle table with a vehicle with a particular Vehicle_ID
+
+-   vehicle_add.php:
+    INSERT INTO Vehicle (Vehicle_ID, Vehicle_type, Vehicle_colour, Vehicle_licence) VALUES ('','{$_POST['type']}','{$_POST['colour']}', '{$_POST['VL']}')
+    - Adding an entry to vehicle table base on user input
+
+    UPDATE Vehicle SET Vehicle_licence = '{$_POST['VL']}', Vehicle_colour = '{$_POST['colour']}', Vehicle_type = '{$_POST['type']}' WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}'
+    - Updating a vehicle with a particular Vehicle_ID to vehicle table base on user input
+
+    INSERT INTO Ownership (People_ID, Vehicle_ID) VALUES (".$_SESSION["People_ID"].",".$_SESSION['Vehicle_ID'].")
+    - Adding an entry to ownership table of a particular People_ID and Vehicle_ID
+
+    DELETE FROM Ownership WHERE Vehicle_ID = ".$_GET['del']."
+    - Removing an entry from ownership table of with a particular Vehicle_ID
+
+    SELECT * FROM Vehicle WHERE Vehicle_ID = '{$_SESSION["Vehicle_ID"]}'
+    - Projecting a vehicle detail from vehicle table with a particular Vehicle_ID
+
+    SELECT People_name, People_ID FROM People NATURAL join Ownership RIGHT JOIN Vehicle ON Vehicle.Vehicle_ID = Ownership.Vehicle_ID WHERE Vehicle.Vehicle_ID = '{$_SESSION["Vehicle_ID"]}'
+    - Projecting an owner detail associate with a vehicle by a vehicle's Vehicle_ID
+
+
+PHP:
+
+It evolve around building blocks and maximise reuse of code by including one or more php file within another php file.
+PHP pages are split down heavily. Most page contain both html and php codes within, with small amount of javascript. However, some only contain html only or php only (which include serval other php pages).
+Session variables are used for the storing information to carry across pages of sql queries for display (most heavily for the adding report). Session variables are heavily use to indicate what page to redirecting back to.
+A mixture of switch and if statements were used to allow divert to the correct path when these condition are met.
+
+Files Included:
+
+The total number of files included is 28.
+
+-	config.php: Contain information about MySQL Database configuration. Also include the CSS (bootstrap) details.
+-	login.php: Contain information about php script and HTML script to do login.
+-	session.php: Verify the session, if there is no session it will redirect to login page. Also contain information of page header and navigation bar which are contain in all pages other than login.
+-	logout.php: Contain information about how to logout from login session.
+-	home.php: Include HTML and php for homepage of the 'Police Traffic Record'.
+
+-	change_password.php: Include HTML and php to allow user changing their password
+-	manage_user.php: Include HTML and php to allow Admin users deleted other users.
+-	add_new_user.php: Include HTML and php to allow Admin users add new users of all types.
+
+-	view_fines.php: Include HTML and php to allow viewing of fines.
+-	add_fine.php: Include HTML and php to allow adding of a fine.
+
+-	view_report.php: Include HTML and php to allow viewing of reports.
+-	add_report.php: Contain 2 php page to allow the display of add/edit report page.
+-	add_report_form.php: Include HTML and php to allow to add or edit report.
+
+-   search.php: Contain HTML (and php, for calling variable) of a search bar that is use in all the search different pages.
+-   offence_search.php:  Contain php for display of offence(s) search results.
+-   search_incident.php: Contain php for display of incident(s) search results.
+-	people_search.php: Contain php for display of people search results.
+-	vehicle_search.php: Contain php for display of vehicle(s) search results.
+
+-   person.php: Include HTML and php to allow viewing list of return result.
+-   person_detail.php: Include HTML and php to allow adding viewing an individual person entry.
+-   person_edit.php: Contain 2 php page to allow the display of add/edit report page.
+-   person_add.php: Include HTML and php to allow to add or edit of a person.
+
+-   vehicle.php: Include HTML and php to allow viewing list of return result.
+-   vehicle_detail.php: Include HTML and php to allow adding viewing an individual vehicle entry.
+-   vehicle_edit.php: Contain 2 php page to allow the display of add/edit report page.
+-   vehicle_add.php: Include HTML and php to allow to add or edit vehicle.
+
+-	assign_person.php: Contain php include serval php pages to allow correct embedding and redirection to assign person/driver/owner.
+-	assign_vehicle.php: Contain php include serval php pages to allow correct embedding and redirection to assign vehicle.

@@ -2,25 +2,24 @@
    include('config.php');
    session_start();
 
-//   if($_SERVER["REQUEST_METHOD"] == "POST") {
      if(isset($_POST["submit"])){
-      // Extract username and password sent from form 
+      // Extract username and password sent from form
       $myusername = mysqli_real_escape_string($db,$_POST['username']);
       $mypassword = mysqli_real_escape_string($db,$_POST['password']);
 
-      $sql = "SELECT * FROM Officer_access WHERE username = '$myusername' and password = '$mypassword';";
+      $sql = "SELECT username FROM Officer_access WHERE username = '$myusername' and password = '$mypassword';";
       $result = mysqli_query($db,$sql);
 
       // If result matched $myusername and $mypassword, table row must be 1 row
       if(mysqli_num_rows($result) == 1) {
         $_SESSION['login_user'] = $myusername;
-
         echo '<script>window.location="home.php"</script>';
       }
 	  else {
           $message = "Your Login Name or Password is invalid";
       }
-   }
+  }
+
 ?>
 
 <html>

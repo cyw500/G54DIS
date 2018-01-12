@@ -42,7 +42,7 @@
     </head>
 
     <body>
-        <form action="home.php" method="post">
+        <form action="home.php" method="post" autocomplete="off">
             <div class="row">
             <div class="col-sm-offset-1 col-sm-6">
                 <div class="input-group">

@@ -11,12 +11,12 @@
 <body>
     <script>
         // A JavaScript function to confirm delete
-        function confirmDelete(ID)
+        function confirmDelete(user)
         {
            var act = confirm("Are you sure?");
            if (act == true) // if OK pressed
            {
-              delParam="?del="+ID; // add del parameter to URL
+              delParam="?del="+user; // add del parameter to URL
               this.document.location.href=delParam; // reload document
            }
         }
@@ -27,16 +27,21 @@
     <?php
     if (isset($_GET['del']))
      {
+       if ($_SESSION['login_user'] == $_GET['del']) {
+           $message = "<font color=red>Cannot remove yourself from database</font>";
+       } if ($_SESSION['login_user'] != $_GET['del']) {
+
        // construct the DELETE query
-       $sql="DELETE FROM Officer_access WHERE Officer_ID = ".$_GET['del'].";" ;
+       $sql="DELETE FROM Officer_access WHERE username = '".$_GET['del']."';" ;
        // send query to database
        $result = mysqli_query($db, $sql);
 
        echo '<script>window.location="manage_user.php"</script>';
+       }
      }
 
         // construct the SELECT query
-        $sql = "SELECT * FROM Officer_access ORDER BY username;";
+        $sql = "SELECT username, Admin FROM Officer_access ORDER BY username;";
         // send query to database
         $result = mysqli_query($db, $sql);
         // if deleting yourself..... logout and warning????
@@ -60,20 +65,20 @@
                         <td>". $row["Admin"]."</td>";
 
              echo "<td><button type=button class='btn btn-warning btn-xs'
-             onclick=confirmDelete(".$row["Officer_ID"].")>Delete</button></td></tr>";
+             onclick=confirmDelete('".$row["username"]."')>Delete</button></td></tr>";
            }
            echo "</table><br>"; // end of list
       }
     ?>
-
+    <div class='row'>
     <div class="col-xs-8 col-sm-6 col-lg-4">
         <a href="add_new_user.php" class="btn btn-default btn-block" style='white-space: normal'>Add new user</a>
     </div>
-    <br><br>
-        <div class="col-xs-8 col-sm-6 col-lg-4">
-        <a href="home.php" class="btn btn-default pull-right">Back to main menu</a>
-        </div>
     </div>
-</div>
+    <?php
+    echo "<br><div class='col-xs-8 col-sm-6 col-lg-4'>".$message."</div><br><br>";
+    ?>
+    </div>
+    </div>
 </body>
 </html>

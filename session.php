@@ -2,11 +2,8 @@
    include('config.php');
    session_start();
 
-   // print_r($_SESSION);
-   // echo "<br><br>";
-
    // Checking type of user and other information
-   $sql = "SELECT username, Admin, Officer_ID FROM Officer_access
+   $sql = "SELECT username, Admin FROM Officer_access
             WHERE username = '{$_SESSION['login_user']}';";
    $ses_sql = mysqli_query($db,$sql);
    $row = mysqli_fetch_array($ses_sql);
@@ -22,8 +19,8 @@
       header("Location: logout.php");
    }
 
-   if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
-    // if last request was more than 60 minutes ago, sent to logout and destroy session
+   if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 600)) {
+    // if last request was more than 10 minutes ago, sent to logout and destroy session
     header("Location: logout.php");
     }
 
@@ -41,6 +38,7 @@
             <p class="navbar-text"> Username :
                 <?php echo "{$_SESSION['login_user']} <font color=red>{$user_type}</font>" ?> </p>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="home.php">Home</a></li>
                 <li><a href="manage_user.php"><?php echo $manage_users?></a></li>
                 <li><a href="change_password.php">Change password </a></li>
                 <li><a href="logout.php"> <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

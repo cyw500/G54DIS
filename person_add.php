@@ -119,8 +119,7 @@
     <div class="col-sm-offset-2">
     <br><?php echo $message ?>
     </div>
-    <a href="home.php" class="btn btn-default pull-right" role="button">Back to main menu</a><br><br>
     </form>
-</div><br>
+</div>
 </body>
 </html>

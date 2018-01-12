@@ -1,0 +1,52 @@
+To access the 'Police Traffic Records' with assigned user's username and password at login page. Successfully login will automatically bring user to the home page.
+
+Home page
+-All user can
+    -search person/vehicles via clicking on the button with relevant text combine with entering searching keyword in the search bar.
+    -view their own reports (Admin users can view all reports submitted) via clicking on the view reports button.
+    -add reports via clicking on the add reports button.
+-Admin users can
+    -view of add fines via clicking on the button relevant text.
+
+Navigation bar
+-Clicking on 'Home' bring user to home page.
+-Admin users can add and remove user by clicking into manage users.
+-All users can change their password and logout by clicking on the relevant text.
+
+Searches
+Entering keyword in the search bar
+-Person's name or driving licence number to look up person(driver/owner)
+or when searching for incident to attach within adding fine.
+-Vehicle licence plate to look up vehicle(s).
+-Search leaving search bar empty results in listing of all records.
+
+Search results
+-If more than one search result return clicking onto the link (person's name or vehicle details) with bring user to a individual record of a person or vehicle full detail.
+-In individual record of a person/vehicle, user can clicking onto the link of a person attached vehicle(s) which bring you to the vehicle detail page and vice versa. User can also delete the entry or edit these entry's detail via pressing the relevant button. Successful deletion will automatically redirect to the search page.
+-Searches initiate within another pages other then home page click on these link results in information attachment.
+
+Add new (person/vehicle)
+-Press save to submit the entry. Successful submission will redirect to their corresponding detail page.
+
+Edit (person/vehicle)
+-Allow user to assign owner to vehicle or assign vehicles to a person as well as alter the record information.
+-Reset button only clear and resets newly entered information.
+-Assigning owner/vehicle(s) will result in resets the newly entered information, therefore save these detail or attach owner/vehicle(s) before enter new information.
+-Press save to update the entry.
+
+Add report
+-Attaching (new or existing) driver, vehicle or offence via clicking on relevant button displayed.
+-Once report submitted, incident datetime cannot be alter via report editing (incident datetime are also restricted with a window from two weeks ago upto current datetime)
+-Press save to submit the report, successful submission will redirect to view reports.
+
+View report
+-Clicking on the datetime of a report will bring users to edit report.
+
+Edit report
+- Can only add or alter driver, vehicle or offence information but not remove.
+- Incident datetime may appear editable however is not the case.
+
+Add Fines
+-Attaching a incident via click the select incident button.
+-When fine or points field leave empty will result in setting the fine or points to zero, proceed with care as once fine is submit cannot be edit.
+-Press save to submit the fine, successful submission will redirect to view fines.
