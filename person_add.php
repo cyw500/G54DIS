@@ -28,7 +28,6 @@
             if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID)
             VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");")) {
             $message = "<font color=red>The vehicle is already attach to an owner</font>";
-//            $message = "Error description: " . mysqli_error($db) ;
             } else {
             $_SESSION['Action'] = "Edit Vehicle";
             $_SESSION["where"] = "edit vehicle";
@@ -50,7 +49,6 @@
        if (!mysqli_query($db, "INSERT INTO Ownership (People_ID, Vehicle_ID)
        VALUES (".$_SESSION['People_ID']."," .$_SESSION["Vehicle_ID"].");"))
        {
-//        $message = "<font color=red>Error description: " . mysqli_error($db)."</font>";
        $message = "<font color=red>Error: Vehicle is alreay attach to another owner</font>";
        } else {
        echo '<script>window.location="person_edit.php"</script>';
@@ -95,7 +93,7 @@
     </div>
     <!-- list the vehicle belong to the owner -->
     <?php
-    if ($_SESSION["where"] == "edit person"){
+    if ($_SESSION["where"] == "edit person") {
      echo "<div class='form-group'>
       <label class='control-label col-sm-2'>Vehicle: </label>
       <label class='control-label col-sm-offset'>";

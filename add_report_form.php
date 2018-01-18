@@ -27,38 +27,43 @@
 
            case "Save":
                if (($_SESSION['Vehicle_ID'] == "") && ($_SESSION['People_ID'] == "")
-               && ($_SESSION['Offence_ID'] == "") && ($_POST['I_description'] == "")) {
+               && ($_SESSION['Offence_ID'] == "")) {
                    $field_message = "please enter details in at least one field";
                } else {
                     $field_message = "";
-               if ($_SESSION['Incident_ID'] == "") {
-                   if (!mysqli_query($db, "INSERT INTO Incident
-                       (Incident_ID, Vehicle_ID, People_ID, Incident_Date,
-                                   Incident_Report, Offence_ID, Officer)
-                       VALUES
-                       (NULL, NULLIF('{$_SESSION['Vehicle_ID']}',''), NULLIF('{$_SESSION['People_ID']}','')
-                       , '{$_SESSION['datetime']}', '{$_POST['I_description']}',
-                       NULLIF('{$_SESSION['Offence_ID']}',''), '{$_SESSION['login_user']}' );")) {
-                        //    echo("Error description: " . mysqli_error($db));
-                            $message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
-                    } else { // if sussfully sumbit query redirect to
-                         echo '<script>window.location="view_report.php"</script>';
-                      }
+					if (($_POST['I_description'] == "") && ($_SESSION['Offence_ID'] == "")) {
+						$other_message = "please enter incident details" ;
+					} else {
+					
+						   if ($_SESSION['Incident_ID'] == "") {
+							   if (!mysqli_query($db, "INSERT INTO Incident
+								   (Incident_ID, Vehicle_ID, People_ID, Incident_Date,
+											   Incident_Report, Offence_ID, Officer)
+								   VALUES
+								   (NULL, NULLIF('{$_SESSION['Vehicle_ID']}',''), NULLIF('{$_SESSION['People_ID']}','')
+								   , '{$_SESSION['datetime']}', '{$_POST['I_description']}',
+								   NULLIF('{$_SESSION['Offence_ID']}',''), '{$_SESSION['login_user']}' );")) {
+									//    echo("Error description: " . mysqli_error($db));
+										$message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
+								} else { // if sussfully sumbit query redirect to
+									 echo '<script>window.location="view_report.php"</script>';
+								  }
 
-                } if ($_SESSION['Incident_ID'] != "") {
-                    if (!mysqli_query($db, "UPDATE Incident SET
-                    Vehicle_ID = NULLIF('{$_SESSION['Vehicle_ID']}',''),
-                    People_ID = NULLIF('{$_SESSION['People_ID']}',''),
-                    Incident_Report = '{$_POST['I_description']}',
-                    Offence_ID = NULLIF('{$_SESSION['Offence_ID']}', '')
-                    WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
-                    $message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
-                    } else {
-                        echo '<script>window.location="view_report.php"</script>';
-                      }
-                  }
+							} if ($_SESSION['Incident_ID'] != "") {
+								if (!mysqli_query($db, "UPDATE Incident SET
+								Vehicle_ID = NULLIF('{$_SESSION['Vehicle_ID']}',''),
+								People_ID = NULLIF('{$_SESSION['People_ID']}',''),
+								Incident_Report = '{$_POST['I_description']}',
+								Offence_ID = NULLIF('{$_SESSION['Offence_ID']}', '')
+								WHERE Incident.Incident_ID = '{$_SESSION['Incident_ID']}';")){
+								$message = "<br><br><font color=red>Submission Error</font>". mysqli_error($db) ;
+								} else {
+									echo '<script>window.location="view_report.php"</script>';
+								  }
+							  }
+					}
               }
-       }
+			}
        }
 
     // attaching the driver/vehicle/offence
@@ -153,7 +158,7 @@
         <label class="control-label col-sm-2">Incident description: </label>
         <div class="col-sm-10">
             <textarea class="form-control" rows="3" name="I_description"
-                placeholder='<?php echo $field_message?>'" Enter incident detail" ><?php echo $_SESSION['Incident_Report']?></textarea>
+                placeholder='<?php echo $other_message?>'" Enter incident detail" ><?php echo $_SESSION['Incident_Report']?></textarea>
         </div>
     </div>
 
