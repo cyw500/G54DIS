@@ -5,11 +5,6 @@
  $password = "";
  $dbname = "g54dis2";
 
-   // $servername = "mysql.cs.nott.ac.uk";
-   // $username = "psxcyw";
-   // $password = "adv6125h";
-   // $dbname = "psxcyw";
-
  $db = mysqli_connect($servername, $username, $password, $dbname);;
 
  if($db == false){
